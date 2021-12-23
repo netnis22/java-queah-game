@@ -1,6 +1,6 @@
 package code;
 
-public class myMain {
+public class Main {
     public static void main(String[] args)
     {
         
