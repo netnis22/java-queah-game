@@ -7,6 +7,10 @@ import javax.swing.*;
 public class MyButton extends JButton {
 
 	private Image img;
+
+	public MyButton() {
+
+	}
 	
 	public MyButton(Image img)
 	{
