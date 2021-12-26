@@ -22,7 +22,12 @@ public class QueahBoard extends JPanel {
     private Soldier redSoldier = new Soldier("red");
     private Soldier blackSoldier = new Soldier("black");
 
-    public QueahBoard() {
+    private Players playerRed;
+    private Players playerBlack;
+
+    public QueahBoard(Players playerRed,Players playerBlack) {
+        this.playerRed = playerRed;
+        this.playerBlack = playerBlack;
         initBoard();
     }
 
@@ -42,7 +47,7 @@ public class QueahBoard extends JPanel {
                 if(Math.abs(column - heightOfboard) <= row){
                     lBoard[row][column]=0;
                     gBoard[row][column]= new BoardSquare(img);
-                    //gBoard[row][column].addActionListener(new AL(row,column));
+                    //gBoard[row][column].addActionListener(new AL(playerRed.getPlayer_color()));
                 }
                 else{
                     lBoard[row][column]=-1;
@@ -90,8 +95,26 @@ public class QueahBoard extends JPanel {
                 add(gBoard[row][column]);
             }
         }		
-		turn=startPlayer;		
+		turn=startPlayer;
 	}
+
+    class AL implements ActionListener{
+        private int player;
+        public AL(int player){
+            this.player = player;
+        }
+
+        public void actionPerformed(ActionEvent e){
+            if(player == 1){
+                playerRed.removeSoldier();
+            }
+            else
+            {
+                playerBlack.removeSoldier();
+            }
+            
+        }
+    }
 
     public int[][] getlBoard(){
         return lBoard;
