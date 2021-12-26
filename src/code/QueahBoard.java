@@ -4,10 +4,10 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class QueahMain extends JFrame {
+public class QueahBoard extends JPanel {
 
     //img
-    private static final String FREE="src/img/free.gif";
+    private static final String FREE="src/img/free.png";
 
 
     private static int startPlayer=1; 
@@ -16,26 +16,22 @@ public class QueahMain extends JFrame {
     private static int heightOfboard=2;
     private int turn;
 
-    private MyButton [][] gBoard;  //graphic board
-	private int [][] lBoard;       //logic board, 0 free 1 red player  2 black Player
+    private BoardSquare [][]gBoard;  //graphic board
+	private int [][]lBoard;       //logic board, 0 free 1 red player  2 black Player
 
-    public QueahMain() {
+    private Soldier redSoldier = new Soldier("red");
+    private Soldier blackSoldier = new Soldier("black");
 
+    public QueahBoard() {
         initBoard();
-
-        setTitle("QueahMain");
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setSize(300,300);
-		setVisible(true);
     }
 
     public void initBoard()
 	{
-		gBoard = new MyButton[sizeOfboard][sizeOfboard];
+		gBoard = new BoardSquare[sizeOfboard][sizeOfboard];
 		lBoard = new int[sizeOfboard][sizeOfboard];
 		
 		setLayout(new GridLayout(sizeOfboard,sizeOfboard));
-		
         //up
         for (int row = 0; row < heightOfboard; row ++) {
             for (int column = 0; column < sizeOfboard; column ++) {
@@ -45,11 +41,12 @@ public class QueahMain extends JFrame {
 
                 if(Math.abs(column - heightOfboard) <= row){
                     lBoard[row][column]=0;
-                    gBoard[row][column]= new MyButton(img);
+                    gBoard[row][column]= new BoardSquare(img);
+                    //gBoard[row][column].addActionListener(new AL(row,column));
                 }
                 else{
                     lBoard[row][column]=-1;
-                    gBoard[row][column] = new MyButton();
+                    gBoard[row][column] = new BoardSquare();
                     gBoard[row][column].setEnabled(false);
                     gBoard[row][column].setBackground(Color.BLACK);
                 }
@@ -65,7 +62,8 @@ public class QueahMain extends JFrame {
 				Image img = icon.getImage();
 
                 lBoard[row][column]=0;
-                gBoard[row][column]= new MyButton(img);
+                gBoard[row][column]= new BoardSquare(img);
+                //gBoard[row][column].addActionListener(new AL(row,column));
                 add(gBoard[row][column]);
             }
         }
@@ -78,11 +76,12 @@ public class QueahMain extends JFrame {
 
                 if((lBoard[k][column]==0)){
                     lBoard[row][column]=0;
-                    gBoard[row][column]= new MyButton(img);
+                    gBoard[row][column]= new BoardSquare(img);
+                    //gBoard[row][column].addActionListener(new AL(row,column));
                 }
                 else{
                     lBoard[row][column]=-1;
-                    gBoard[row][column] = new MyButton();
+                    gBoard[row][column] = new BoardSquare();
                     gBoard[row][column].setEnabled(false);
                     gBoard[row][column].setBackground(Color.BLACK);
                 }
@@ -94,11 +93,16 @@ public class QueahMain extends JFrame {
 		turn=startPlayer;		
 	}
 
-
-    public static void main(String[] args)
-    {
-        new QueahMain();
-
-        
+    public int[][] getlBoard(){
+        return lBoard;
     }
+
+    public void setlBoaed(int[][] lBoard){
+        this.lBoard=lBoard;
+    }
+
+    public BoardSquare [][]gBoard(){
+        return gBoard;
+    }
+
 }
