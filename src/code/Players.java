@@ -14,10 +14,10 @@ public class Players extends JPanel {
     private static final ImageIcon BlackSoldier =  new ImageIcon("src/img/Soldier_black.png");
     private JLabel img;
 
-    public Players(int player_color,int soldier_left,int soldier_on_board){
+    public Players(int player_color,int soldiers,int soldier_on_board){
         this.player_color = player_color;
-        this.soldier_left=soldier_left;
         this.soldier_on_board = soldier_on_board;
+        this.soldier_left=soldiers-soldier_on_board;
 
         setLayout(new GridLayout(1,soldier_left));
         drawSoldier_left();

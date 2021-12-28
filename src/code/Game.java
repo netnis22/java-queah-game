@@ -6,9 +6,9 @@ import javax.swing.JFrame;
 public class Game extends JFrame {
 
     public Game() {
-        Players playerRed = new Players(1,6,4);
-        Players playerBlack = new Players(2,6,4);
-        QueahBoard board = new QueahBoard(playerRed,playerBlack);
+        Players playerRed = new Players(1,10,4);
+        Players playerBlack = new Players(2,10,4);
+        QueahBoard board = new QueahBoard(playerRed,playerBlack,5,2);
 
         add(board,BorderLayout.CENTER);
         add(playerRed,BorderLayout.NORTH);

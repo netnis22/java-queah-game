@@ -16,7 +16,7 @@ public class QueahBoard extends JPanel {
     private static int heightOfboard=2;
     private int turn;
 
-    private BoardSquare [][]gBoard;  //graphic board
+    private GameButton [][]gBoard;  //graphic board
 	private int [][]lBoard;       //logic board, 0 free 1 red player  2 black Player
 
     private Soldier redSoldier = new Soldier("red");
@@ -25,15 +25,17 @@ public class QueahBoard extends JPanel {
     private Players playerRed;
     private Players playerBlack;
 
-    public QueahBoard(Players playerRed,Players playerBlack) {
+    public QueahBoard(Players playerRed,Players playerBlack,int sizeOfboard,int heightOfboard) {
         this.playerRed = playerRed;
         this.playerBlack = playerBlack;
+        QueahBoard.sizeOfboard = sizeOfboard;
+        QueahBoard.heightOfboard = heightOfboard;
         initBoard();
     }
 
     public void initBoard()
 	{
-		gBoard = new BoardSquare[sizeOfboard][sizeOfboard];
+		gBoard = new GameButton[sizeOfboard][sizeOfboard];
 		lBoard = new int[sizeOfboard][sizeOfboard];
 		
 		setLayout(new GridLayout(sizeOfboard,sizeOfboard));
@@ -46,12 +48,12 @@ public class QueahBoard extends JPanel {
 
                 if(Math.abs(column - heightOfboard) <= row){
                     lBoard[row][column]=0;
-                    gBoard[row][column]= new BoardSquare(img);
+                    gBoard[row][column]= new GameButton(img);
                     //gBoard[row][column].addActionListener(new AL(playerRed.getPlayer_color()));
                 }
                 else{
                     lBoard[row][column]=-1;
-                    gBoard[row][column] = new BoardSquare();
+                    gBoard[row][column] = new GameButton();
                     gBoard[row][column].setEnabled(false);
                     gBoard[row][column].setBackground(Color.BLACK);
                 }
@@ -67,7 +69,7 @@ public class QueahBoard extends JPanel {
 				Image img = icon.getImage();
 
                 lBoard[row][column]=0;
-                gBoard[row][column]= new BoardSquare(img);
+                gBoard[row][column]= new GameButton(img);
                 //gBoard[row][column].addActionListener(new AL(row,column));
                 add(gBoard[row][column]);
             }
@@ -81,12 +83,12 @@ public class QueahBoard extends JPanel {
 
                 if((lBoard[k][column]==0)){
                     lBoard[row][column]=0;
-                    gBoard[row][column]= new BoardSquare(img);
+                    gBoard[row][column]= new GameButton(img);
                     //gBoard[row][column].addActionListener(new AL(row,column));
                 }
                 else{
                     lBoard[row][column]=-1;
-                    gBoard[row][column] = new BoardSquare();
+                    gBoard[row][column] = new GameButton();
                     gBoard[row][column].setEnabled(false);
                     gBoard[row][column].setBackground(Color.BLACK);
                 }
@@ -124,7 +126,7 @@ public class QueahBoard extends JPanel {
         this.lBoard=lBoard;
     }
 
-    public BoardSquare [][]gBoard(){
+    public GameButton [][]gBoard(){
         return gBoard;
     }
 
