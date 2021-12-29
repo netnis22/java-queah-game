@@ -16,7 +16,6 @@ public class Game extends JFrame {
         add(playerRed,BorderLayout.NORTH);
         add(playerBlack,BorderLayout.SOUTH);
         
-        // playerRed.removeSoldier();
         board.smallMapSolid();
         setTitle("Queah");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);

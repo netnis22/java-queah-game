@@ -9,7 +9,6 @@ public class QueahBoard extends JPanel {
     //img
     private static final String FREE="src/img/free.png";
 
-
     private static int startPlayer=1;
 
     private static int sizeOfboard=5;
@@ -61,7 +60,7 @@ public class QueahBoard extends JPanel {
                     lBoard[row][column]=-1;
                     gBoard[row][column] = new GameButton();
                     gBoard[row][column].setEnabled(false);
-                    gBoard[row][column].setBackground(Color.BLACK);
+                    gBoard[row][column].setBackground(new Color(0,0,0,0.7f));
                 }
             }
             for (int column = 0; column < sizeOfboard; column ++) {
@@ -96,7 +95,7 @@ public class QueahBoard extends JPanel {
                     lBoard[row][column]=-1;
                     gBoard[row][column] = new GameButton();
                     gBoard[row][column].setEnabled(false);
-                    gBoard[row][column].setBackground(Color.BLACK);
+                    gBoard[row][column].setBackground(new Color(0,0,0,0.7f));
                 }
             }
             for (int column = 0; column < sizeOfboard; column ++) {
@@ -234,14 +233,26 @@ public class QueahBoard extends JPanel {
                 if(lBoard[row][column] == 0 && lBoard[previsRow][previsColumn] == turn){
                     if(!(previsRow == row && previsColumn == column)){
                         if(previsColumn == column){
-                            if((previsRow == row+2 && (lBoard[row+1][column] !=turn && lBoard[row+1][column] !=0 ))) removeSoldier(row+1, column);
-                            else if((previsRow == row-2 && (lBoard[row-1][column] !=turn && lBoard[row-1][column] !=0 ))) removeSoldier(row-1,column);
-                            moveSoldier();
+                            if((previsRow == row+2 && (lBoard[row+1][column] !=turn && lBoard[row+1][column] !=0 ))){
+                                removeSoldier(row+1, column);
+                                moveSoldier();
+                            } 
+                            else if((previsRow == row-2 && (lBoard[row-1][column] !=turn && lBoard[row-1][column] !=0 ))){
+                                removeSoldier(row-1,column);
+                                moveSoldier();
+                            } 
+                            
                         }
                         else if(previsRow == row){
-                            if((previsColumn == column+2 && (lBoard[row][column+1] !=turn && lBoard[row][column+1] !=0 ))) removeSoldier(row, column+1);
-                            else if((previsColumn == column-2 && (lBoard[row][column-1] !=turn && lBoard[row][column-1] !=0 ))) removeSoldier(row, column-1);
-                            moveSoldier();
+                            if((previsColumn == column+2 && (lBoard[row][column+1] !=turn && lBoard[row][column+1] !=0 ))){
+                                removeSoldier(row, column+1);
+                                moveSoldier();
+                            } 
+                            else if((previsColumn == column-2 && (lBoard[row][column-1] !=turn && lBoard[row][column-1] !=0 ))){
+                                removeSoldier(row, column-1);
+                                moveSoldier();
+                            } 
+                            
                         }
                     }
                 } 
