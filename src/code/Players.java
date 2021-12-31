@@ -14,9 +14,22 @@ public class Players extends JPanel {
     private static final ImageIcon BlackSoldier =  new ImageIcon("src/img/Soldier_black.png");
     private JLabel img;
 
-    public Players(int player_color,int soldiers,String map){
+    public Players(int player_color,String map){
         this.player_color = player_color;
-        if(map.equals("small")) soldier_on_board=4;
+        int soldiers;
+        if(map.equals("small")){
+            soldier_on_board=4;
+            soldiers=10;
+        }
+        else if(map.equals("mid")){
+            soldier_on_board=6;
+            soldiers=14;
+        }
+        else
+        {
+            soldier_on_board=4;
+            soldiers=10;
+        }
         this.soldier_left=soldiers-soldier_on_board;
 
         setLayout(new GridLayout(1,soldier_left));

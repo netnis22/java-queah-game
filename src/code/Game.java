@@ -6,17 +6,17 @@ import javax.swing.JFrame;
 public class Game extends JFrame {
 
     public Game() {
-        String map ="small";
+        String map ="mid";
 
-        Players playerRed = new Players(1,10,map);
-        Players playerBlack = new Players(2,10,map);
+        Players playerRed = new Players(1,map);
+        Players playerBlack = new Players(2,map);
         QueahBoard board = new QueahBoard(playerRed,playerBlack,map,Game.this);
 
         add(board,BorderLayout.CENTER);
         add(playerRed,BorderLayout.NORTH);
         add(playerBlack,BorderLayout.SOUTH);
         
-        board.smallMapSolid();
+        board.midMapSolid();
         setTitle("Queah");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setSize(300,350);

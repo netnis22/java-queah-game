@@ -35,6 +35,10 @@ public class QueahBoard extends JPanel {
             QueahBoard.sizeOfboard = 5;
             QueahBoard.heightOfboard = 2;
         }
+        if(map.equals("mid")){
+            QueahBoard.sizeOfboard = 7;
+            QueahBoard.heightOfboard = 3;
+        }
         initBoard();
     }
 
@@ -125,6 +129,35 @@ public class QueahBoard extends JPanel {
         lBoard[3][1] = 1;
         gBoard[2][1].setSoldier(redSoldier);
         lBoard[2][1] = 1;
+    }
+
+    public void midMapSolid(){
+        max_Player_soldiers_on_board=2;
+        gBoard[0][3].setSoldier(blackSoldier);
+        lBoard[0][3] = 2;
+        gBoard[1][3].setSoldier(blackSoldier);
+        lBoard[1][3] = 2;
+        gBoard[1][4].setSoldier(blackSoldier);
+        lBoard[1][4] = 2;
+        gBoard[2][4].setSoldier(blackSoldier);
+        lBoard[2][4] = 2;
+        gBoard[2][5].setSoldier(blackSoldier);
+        lBoard[2][5] = 2;
+        gBoard[3][5].setSoldier(blackSoldier);
+        lBoard[3][5] = 2;
+
+        gBoard[6][3].setSoldier(redSoldier);
+        lBoard[6][3] = 1;
+        gBoard[5][3].setSoldier(redSoldier);
+        lBoard[5][3] = 1;
+        gBoard[5][2].setSoldier(redSoldier);
+        lBoard[5][2] = 1;
+        gBoard[4][2].setSoldier(redSoldier);
+        lBoard[4][2] = 1;
+        gBoard[4][1].setSoldier(redSoldier);
+        lBoard[4][1] = 1;
+        gBoard[3][1].setSoldier(redSoldier);
+        lBoard[3][1] = 1;
     }
 
     class AL implements ActionListener{
@@ -269,7 +302,7 @@ public class QueahBoard extends JPanel {
                 previsColumn=column;
             }
             //debag:
-            //System.out.println("previsRow:"+previsRow+" "+"previsColumn:"+previsColumn+" "+"previsButtonPressed:"+previsButtonPressed+" "+"row:"+row+" "+"column:"+column+" "+"player:"+lBoard[row][column]);
+            System.out.println("previsRow:"+previsRow+" "+"previsColumn:"+previsColumn+" "+"previsButtonPressed:"+previsButtonPressed+" "+"row:"+row+" "+"column:"+column+" "+"player:"+lBoard[row][column]);
         }
     }
 
