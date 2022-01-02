@@ -39,6 +39,10 @@ public class QueahBoard extends JPanel {
             QueahBoard.sizeOfboard = 7;
             QueahBoard.heightOfboard = 3;
         }
+        if(map.equals("large")){
+            QueahBoard.sizeOfboard = 9;
+            QueahBoard.heightOfboard = 4;
+        }
         initBoard();
     }
 
@@ -132,7 +136,7 @@ public class QueahBoard extends JPanel {
     }
 
     public void midMapSolid(){
-        max_Player_soldiers_on_board=2;
+        max_Player_soldiers_on_board=6;
         gBoard[0][3].setSoldier(blackSoldier);
         lBoard[0][3] = 2;
         gBoard[1][3].setSoldier(blackSoldier);
@@ -158,6 +162,43 @@ public class QueahBoard extends JPanel {
         lBoard[4][1] = 1;
         gBoard[3][1].setSoldier(redSoldier);
         lBoard[3][1] = 1;
+    }
+
+    public void largeMapSolid(){
+        max_Player_soldiers_on_board=8;
+        gBoard[0][4].setSoldier(blackSoldier);
+        lBoard[0][4] = 2;
+        gBoard[1][4].setSoldier(blackSoldier);
+        lBoard[1][4] = 2;
+        gBoard[1][5].setSoldier(blackSoldier);
+        lBoard[1][5] = 2;
+        gBoard[2][5].setSoldier(blackSoldier);
+        lBoard[2][5] = 2;
+        gBoard[2][6].setSoldier(blackSoldier);
+        lBoard[2][6] = 2;
+        gBoard[3][6].setSoldier(blackSoldier);
+        lBoard[3][6] = 2;
+        gBoard[3][7].setSoldier(blackSoldier);
+        lBoard[3][7] = 2;
+        gBoard[4][7].setSoldier(blackSoldier);
+        lBoard[4][7] = 2;
+
+        gBoard[8][4].setSoldier(redSoldier);
+        lBoard[8][4] = 1;
+        gBoard[7][4].setSoldier(redSoldier);
+        lBoard[7][4] = 1;
+        gBoard[7][3].setSoldier(redSoldier);
+        lBoard[7][3] = 1;
+        gBoard[6][3].setSoldier(redSoldier);
+        lBoard[6][3] = 1;
+        gBoard[6][2].setSoldier(redSoldier);
+        lBoard[6][2] = 1;
+        gBoard[5][2].setSoldier(redSoldier);
+        lBoard[5][2] = 1;
+        gBoard[5][1].setSoldier(redSoldier);
+        lBoard[5][1] = 1;
+        gBoard[4][1].setSoldier(redSoldier);
+        lBoard[4][1] = 1;
     }
 
     class AL implements ActionListener{

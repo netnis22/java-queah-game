@@ -25,6 +25,11 @@ public class Players extends JPanel {
             soldier_on_board=6;
             soldiers=14;
         }
+        else if(map.equals("large"))
+        {
+            soldier_on_board=8;
+            soldiers=18;
+        }
         else
         {
             soldier_on_board=4;
