@@ -14,7 +14,7 @@ public class QueahBoard extends JPanel {
     private static int sizeOfboard=5;
     private static int heightOfboard=2;
     private static int max_Player_soldiers_on_board=4;
-    private int turn;
+    private static int turn;
 
     private GameButton [][]gBoard;  //graphic board
 	private int [][]lBoard;       //logic board, 0 free 1 red player  2 black Player
@@ -27,10 +27,11 @@ public class QueahBoard extends JPanel {
 
     private Game game;
 
-    public QueahBoard(Players playerRed,Players playerBlack,String map,Game game) {
+    public QueahBoard(Players playerRed,Players playerBlack,String map,Game game,int start) {
         this.playerRed = playerRed;
         this.playerBlack = playerBlack;
         this.game= game;
+        startPlayer=start;
         if(map.equals("small")){
             QueahBoard.sizeOfboard = 5;
             QueahBoard.heightOfboard = 2;
@@ -112,6 +113,10 @@ public class QueahBoard extends JPanel {
         }		
 		turn=startPlayer;
 	}
+
+    public static void setTurn(int start){
+        turn=start;
+    }
 
     public void smallMapSolid(){
         max_Player_soldiers_on_board=4;
