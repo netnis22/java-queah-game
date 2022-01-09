@@ -10,8 +10,8 @@ public class Soldier{
     private final String color;
     private int  x,y;
 
-    Image redSoldier = new ImageIcon("src/img/Soldier_red.png").getImage();
-    Image blackSoldier =  new ImageIcon("src/img/Soldier_black.png").getImage();
+    Image redSoldier = new ImageIcon("src/img/Soldier_red_New.png").getImage();
+    Image blackSoldier =  new ImageIcon("src/img/Soldier_black_New.png").getImage();
 
     public Soldier(Image img,String color,int x,int y) {
         this.img=img;

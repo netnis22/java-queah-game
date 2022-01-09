@@ -4,10 +4,13 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+
 public class QueahBoard extends JPanel {
 
     //img
-    private static final String FREE="src/img/free.png";
+    private static final String IMG_BOARD="src/img/Wood.png";
+    ImageIcon icon = new ImageIcon(IMG_BOARD);
+	Image img = icon.getImage();
 
     private static int startPlayer=1;
 
@@ -56,10 +59,6 @@ public class QueahBoard extends JPanel {
         //up
         for (int row = 0; row < heightOfboard; row ++) {
             for (int column = 0; column < sizeOfboard; column ++) {
-
-                ImageIcon icon = new ImageIcon(FREE);
-				Image img = icon.getImage();
-
                 if(Math.abs(column - heightOfboard) <= row){
                     lBoard[row][column]=0;
                     gBoard[row][column]= new GameButton(img,null);
@@ -79,9 +78,6 @@ public class QueahBoard extends JPanel {
         //mid
         for( int row=heightOfboard; row<(sizeOfboard-heightOfboard); row++){
             for(int column=0; column<sizeOfboard; column++){
-                ImageIcon icon = new ImageIcon(FREE);
-				Image img = icon.getImage();
-
                 lBoard[row][column]=0;
                 gBoard[row][column]= new GameButton(img,null);
                 gBoard[row][column].addActionListener(new AL(row,column));
@@ -91,10 +87,6 @@ public class QueahBoard extends JPanel {
         //down
         for (int row = sizeOfboard-heightOfboard,k=heightOfboard-1; row < sizeOfboard; row ++,k--) {
             for (int column = 0; column < sizeOfboard; column ++) {
-
-                ImageIcon icon = new ImageIcon(FREE);
-				Image img = icon.getImage();
-
                 if((lBoard[k][column]==0)){
                     lBoard[row][column]=0;
                     gBoard[row][column]= new GameButton(img,null);

@@ -22,4 +22,4 @@ Game Play and Rules:
 	  A player's number of pieces on the board must always be restored to four,
 	  unless of course the player has exhausted their reserve. Please note though,
 	  that a player can only drop a piece from their reserve,
-	  if one of their pieces was captured on the opponent's last turn.
+	  if one of their pieces was captured on the opponent's last turn.	

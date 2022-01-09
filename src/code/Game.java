@@ -1,8 +1,12 @@
 package code;
 
 import java.awt.*;
+import java.io.IOException;
+import java.nio.file.*;
+
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 public class Game extends JFrame {
 
@@ -30,8 +34,20 @@ public class Game extends JFrame {
 		setVisible(true);
     }
 
+	private static String getFileInfo(){ 
+		String path = "src/Game_Play_and_Rules.txt";
+
+        try {
+            String content = Files.readString(Paths.get(path));
+            return content;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+		return null;
+	}
+
     public void menuMap(){
-        String[] options =  {"small", "mid", "large","Exit"};
+        String[] options =  {"small", "mid", "large","Rules","Exit"};
 		int response = JOptionPane.showOptionDialog(null, "Choose Type map", 
 				"Starting map Options",
 				JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
@@ -56,12 +72,19 @@ public class Game extends JFrame {
 				map = "large";
 				startMap();
 				break;
-				
-			case  3:
+
+			case 3:
+			    Runnable  rule = () -> {String html =("<html><body width='%1s'><h1>Rules</h1><p>"+getFileInfo());
+				JOptionPane.showMessageDialog(Game.this, String.format(html, 500, 500));
+				};
+				SwingUtilities.invokeLater(rule);
+				menuMap();
+				break;
+			case  4:
 				System.exit(0);
 				
 			default:
-				break;		
+				break;
 		}
     }
 
