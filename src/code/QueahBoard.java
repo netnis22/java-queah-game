@@ -35,6 +35,29 @@ public class QueahBoard extends JPanel {
         this.playerBlack = playerBlack;
         this.game= game;
         startPlayer=start;
+        constrictorMap(map);
+        initBoard();
+    }
+
+    public QueahBoard(Computer playerRed,Players playerBlack,String map,Game game,int start) {
+        this.playerRed = playerRed;
+        this.playerBlack = playerBlack;
+        this.game= game;
+        startPlayer=start;
+        constrictorMap(map);
+        initBoard();
+    }
+
+    public QueahBoard(Computer playerRed,Computer playerBlack,String map,Game game,int start) {
+        this.playerRed = playerRed;
+        this.playerBlack = playerBlack;
+        this.game= game;
+        startPlayer=start;
+        constrictorMap(map);
+        initBoard();
+    }
+
+    private void constrictorMap(String map){
         if(map.equals("small")){
             QueahBoard.sizeOfboard = 5;
             QueahBoard.heightOfboard = 2;
@@ -47,7 +70,6 @@ public class QueahBoard extends JPanel {
             QueahBoard.sizeOfboard = 9;
             QueahBoard.heightOfboard = 4;
         }
-        initBoard();
     }
 
     public void initBoard()
