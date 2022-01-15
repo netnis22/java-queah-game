@@ -10,49 +10,25 @@ import javax.swing.SwingUtilities;
 
 public class Game extends JFrame {
 
-    String map;
-	int tarn;
-	int gameMode=0;
+    public String map;
+	public int turn;
+	public int gameMode=0;
+
+	public Players playerRed;
+	public Players playerBlack;
+
+	public Computer computerRed;
+	public Computer computerBlack;
+	private QueahBoard board;
 
     public Game() {
         
         menuMap();
-		Players playerRed;
-		Players playerBlack;
-		QueahBoard board;
-
-		switch (gameMode) {
-			case 0:
-				playerRed = new Players(1,map);
-				playerBlack = new Players(2,map);
-				board = new QueahBoard(playerRed,playerBlack,map,Game.this,tarn);
-				break;
-			case 1:
-				playerRed = new Computer(1,map);
-				playerBlack = new Players(2,map);
-				board = new QueahBoard(playerRed,playerBlack,map,Game.this,tarn);
-				break;
-			case 2:
-				playerBlack = new Computer(1,map);
-				playerRed = new Computer(2,map);
-				board = new QueahBoard(playerRed,playerBlack,map,Game.this,tarn);
-				break;
-			default:
-				playerRed = new Players(1,map);
-				playerBlack = new Players(2,map);
-				board = new QueahBoard(playerRed,playerBlack,map,Game.this,tarn);
-				break;
-		}
-        
-        
 
         mapSolid(board);
 
         add(board,BorderLayout.CENTER);
-        add(playerRed,BorderLayout.NORTH);
-        add(playerBlack,BorderLayout.SOUTH);
-        
-        
+    
         setTitle("Queah");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setSize(300,350);
@@ -72,7 +48,7 @@ public class Game extends JFrame {
 	}
 	
 
-    public void menuMap(){
+    private void menuMap(){
         String[] options =  {"small", "mid", "large","Rules","Exit"};
 		int response = JOptionPane.showOptionDialog(null, "Choose Type map", 
 				"Starting map Options",
@@ -114,7 +90,7 @@ public class Game extends JFrame {
 		}
     }
 
-    public void startMap(){
+    private void startMap(){
 		String[] options =  {"RED", "BLACK","Back"};
 		int response = JOptionPane.showOptionDialog(null, "Choose how start?", 
 				"start player",
@@ -128,11 +104,11 @@ public class Game extends JFrame {
 				System.exit(0);
 			
 			case 0:
-				tarn = 1;
+				turn = 1;
 				gameModeMenu();
 				break;
 			case 1:
-				tarn = 2;	
+				turn = 2;	
 				gameModeMenu();
 				break;
 			case  2:
@@ -142,8 +118,8 @@ public class Game extends JFrame {
 		}
     }
 
-	public void gameModeMenu(){
-		String[] options =  {"Human Vs Human", "Human Vs Computer","Computer Vs Computer"};
+	private void gameModeMenu(){
+		String[] options =  {"Human Vs Human", "Human Vs Computer","Computer Vs Computer","Back"};
 		int response = JOptionPane.showOptionDialog(null, "what Game Mode?", 
 				"Game Mode",
 				JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
@@ -156,13 +132,28 @@ public class Game extends JFrame {
 				System.exit(0);
 			
 			case 0:
-				gameMode = 0;
+				gameMode=0;
+				playerRed = new Players(1,map);
+				playerBlack = new Players(2,map);
+				board = new QueahBoard(Game.this);
+				add(playerRed,BorderLayout.NORTH);
+        		add(playerBlack,BorderLayout.SOUTH);
 				break;
 			case 1:
 				gameMode = 1;
+				playerRed =  new Players(1,map);
+				computerBlack =new Computer(2,map);
+				board = new QueahBoard(Game.this);
+				add(playerRed,BorderLayout.NORTH);
+				add(computerBlack,BorderLayout.SOUTH);
 				break;
 			case  2:
 				gameMode = 2;
+				computerRed = new Computer(1,map);
+				computerBlack = new Computer(2,map);
+				board = new QueahBoard(Game.this);
+				add(computerRed,BorderLayout.NORTH);
+				add(computerBlack,BorderLayout.SOUTH);
 				break;
 			case 3:
 				startMap();
@@ -172,7 +163,7 @@ public class Game extends JFrame {
 		}
     }
 	
-	public void mapSolid(QueahBoard board){
+	private void mapSolid(QueahBoard board){
         switch (map) {
             case "small":
                 board.smallMapSolid();

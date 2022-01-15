@@ -17,7 +17,7 @@ public class QueahBoard extends JPanel {
     private static int sizeOfboard=5;
     private static int heightOfboard=2;
     private static int max_Player_soldiers_on_board=4;
-    private static int turn;
+    private static int turn;// 1 red 2 black
 
     private GameButton [][]gBoard;  //graphic board
 	private int [][]lBoard;       //logic board, 0 free 1 red player  2 black Player
@@ -27,35 +27,40 @@ public class QueahBoard extends JPanel {
 
     private Players playerRed;
     private Players playerBlack;
+    private Computer computerRed;
+    private Computer computerBlack;
 
     private Game game;
 
-    public QueahBoard(Players playerRed,Players playerBlack,String map,Game game,int start) {
-        this.playerRed = playerRed;
-        this.playerBlack = playerBlack;
+    public QueahBoard(Game game) {
         this.game= game;
-        startPlayer=start;
-        constrictorMap(map);
+        startPlayer=game.turn;
+
+        constrictGamMode();
+        constrictorMap(game.map);
         initBoard();
     }
 
-    public QueahBoard(Computer playerRed,Players playerBlack,String map,Game game,int start) {
-        this.playerRed = playerRed;
-        this.playerBlack = playerBlack;
-        this.game= game;
-        startPlayer=start;
-        constrictorMap(map);
-        initBoard();
+    private void constrictGamMode(){
+        switch (game.gameMode) {
+            case 1:
+                playerRed = game.playerRed;
+                computerBlack = game.computerBlack;
+                playerBlack = game.computerBlack;
+                break;
+            case 2:
+                computerRed = game.computerRed;
+                computerBlack = game.computerBlack;
+                playerRed = game.computerRed;
+                playerBlack = game.computerBlack;
+                break;
+            default:
+                playerRed=game.playerRed;
+                playerBlack = game.playerBlack;
+                break;
+        }
     }
 
-    public QueahBoard(Computer playerRed,Computer playerBlack,String map,Game game,int start) {
-        this.playerRed = playerRed;
-        this.playerBlack = playerBlack;
-        this.game= game;
-        startPlayer=start;
-        constrictorMap(map);
-        initBoard();
-    }
 
     private void constrictorMap(String map){
         if(map.equals("small")){
@@ -232,15 +237,6 @@ public class QueahBoard extends JPanel {
             this.column=column;
         }
 
-        public void moveSoldier(){
-            lBoard[row][column]=lBoard[previsRow][previsColumn];
-            lBoard[previsRow][previsColumn] = 0;
-            gBoard[row][column].setSoldier(gBoard[previsRow][previsColumn].getSoldier());
-            gBoard[previsRow][previsColumn].setSoldier(null);
-            repaint();
-            if(turn==1) turn=2;
-            else turn=1;
-        }
 
         public void victory(int player){
             String playerColor;
@@ -250,6 +246,17 @@ public class QueahBoard extends JPanel {
             javax.swing.JOptionPane.showMessageDialog(game,playerColor);
             game.dispose();
             new Game();
+        }
+
+        public void moveSoldier(){
+            lBoard[row][column]=lBoard[previsRow][previsColumn];
+            lBoard[previsRow][previsColumn] = 0;
+            gBoard[row][column].setSoldier(gBoard[previsRow][previsColumn].getSoldier());
+            gBoard[previsRow][previsColumn].setSoldier(null);
+            repaint();
+            if(turn==1) turn=2;
+            else turn=1;
+            //System.out.println("turn change to " + turn);
         }
 
         public void removeSoldier(int row, int column){
@@ -310,72 +317,117 @@ public class QueahBoard extends JPanel {
         }
 
         public void actionPerformed(ActionEvent e){
+            switch (game.gameMode) {
+                case 1:
+                    HumanMove();
+                    break;
+                case 2:
+                    ComputerMove();
+                    break;
+                default:
+                    HumanMove();
+                    break;
+            }
+                
+        }
+
+        private void HumanMove(){
+            if(turn == playerRed.getPlayer_color() && (!playerRed.IsHuman())) return;
+            if(turn == playerBlack.getPlayer_color() && (!playerBlack.IsHuman())) return;
+
             if(playerRed.getSoldier_on_board() == 0) victory(2);
             if(playerBlack.getSoldier_on_board() == 0) victory(1);
-
+        
             if(isSoldiersEaten) addSoldierToBoard();
             else if(previsButtonPressed){
                 if(((previsRow == row+1 || previsRow == row-1) && previsColumn == column) || ((previsColumn == column+1 || previsColumn == column-1) && previsRow == row )){
                     if(lBoard[row][column] == 0 && lBoard[previsRow][previsColumn] == turn){
                         if(!(previsRow == row && previsColumn == column)){
+                            System.out.println("1");
                             moveSoldier();
+                            if(game.gameMode==1) ComputerMove(); 
                         }
                     }
                 }
-
+        
                 if(lBoard[row][column] == 0 && lBoard[previsRow][previsColumn] == turn){
                     if(!(previsRow == row && previsColumn == column)){
                         if(previsColumn == column){
                             if((previsRow == row+2 && (lBoard[row+1][column] !=turn && lBoard[row+1][column] !=0 ))){
+                                System.out.println("2");
                                 removeSoldier(row+1, column);
                                 moveSoldier();
+                                if(game.gameMode==1) ComputerMove(); 
                             } 
                             else if((previsRow == row-2 && (lBoard[row-1][column] !=turn && lBoard[row-1][column] !=0 ))){
+                                System.out.println("3");
                                 removeSoldier(row-1,column);
                                 moveSoldier();
+                                if(game.gameMode==1) ComputerMove(); 
                             } 
-                            
+                                    
                         }
                         else if(previsRow == row){
                             if((previsColumn == column+2 && (lBoard[row][column+1] !=turn && lBoard[row][column+1] !=0 ))){
+                                System.out.println("4");
                                 removeSoldier(row, column+1);
                                 moveSoldier();
+                                if(game.gameMode==1) ComputerMove(); 
                             } 
                             else if((previsColumn == column-2 && (lBoard[row][column-1] !=turn && lBoard[row][column-1] !=0 ))){
+                                System.out.println("5");
                                 removeSoldier(row, column-1);
                                 moveSoldier();
+                                if(game.gameMode==1) ComputerMove(); 
                             } 
-                            
+                                    
                         }
                     }
                 } 
-
                 previsButtonPressed = false;
             }
             else if(lBoard[row][column] == 0 ){
+                System.out.println("7");
                 previsButtonPressed = false;
             }
             else
             {
+                System.out.println("8");
                 previsButtonPressed = true;
                 previsRow=row;
                 previsColumn=column;
             }
             //debag:
-            System.out.println("previsRow:"+previsRow+" "+"previsColumn:"+previsColumn+" "+"previsButtonPressed:"+previsButtonPressed+" "+"row:"+row+" "+"column:"+column+" "+"player:"+lBoard[row][column]);
+            System.out.println("previsRow:"+previsRow+" "+"previsColumn:"+previsColumn+" "+"previsButtonPressed:"+previsButtonPressed+" "+"row:"+row+" "+"column:"+column+" "+"player:"+lBoard[row][column]+" "+"turn:"+turn);
         }
-    }
 
-    public int[][] getlBoard(){
-        return lBoard;
-    }
+        private void ComputerMove(){
+            if(playerRed.getSoldier_on_board() == 0) victory(2);
+            if(playerBlack.getSoldier_on_board() == 0) victory(1);
 
-    public void setlBoaed(int[][] lBoard){
-        this.lBoard=lBoard;
-    }
+            int data[];
+            if(turn == playerRed.getPlayer_color() && !playerRed.IsHuman()) data = computerRed.move();
+            else if(turn == playerBlack.getPlayer_color() && !playerBlack.IsHuman()) data = computerBlack.move();
+            else{
+                // if(turn==1) turn=2;
+                // else turn=1;
 
-    public GameButton [][]gBoard(){
-        return gBoard;
-    }
+                return;
+            }
 
+            row = data[0];
+            column = data[1];
+            previsRow = data[2];
+            previsColumn = data[3];
+
+            if(data[6]==0){
+                moveSoldier();
+            }
+            else
+            {
+                removeSoldier(data[4], data[5]);
+                moveSoldier();
+            }
+        }
+    }   
 }

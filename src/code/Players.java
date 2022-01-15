@@ -90,4 +90,10 @@ public class Players extends JPanel {
             add(img,i);
         }
    }
+
+   public boolean IsHuman() {return true;}
+
+//    public int getWeight(int [][]lBoard){
+
+//    }
 }
