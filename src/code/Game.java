@@ -13,6 +13,7 @@ public class Game extends JFrame {
     public String map;
 	public int turn;
 	public int gameMode=0;
+	public int gameStart=1;
 
 	public Players playerRed;
 	public Players playerBlack;

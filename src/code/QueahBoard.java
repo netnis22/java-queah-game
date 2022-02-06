@@ -304,6 +304,7 @@ public class QueahBoard extends JPanel {
                     gBoard[row][column].setSoldier(redSoldier);
                     isSoldiersEaten=false;
                     turn=2;
+                    if(playerRed.IsHuman() && game.gameMode==1) ComputerMove(false);
                 }
             }
             else
@@ -314,6 +315,7 @@ public class QueahBoard extends JPanel {
                     gBoard[row][column].setSoldier(blackSoldier);
                     isSoldiersEaten=false;
                     turn=1;
+                    if(!playerBlack.IsHuman() && game.gameMode==1) ComputerMove(false);
                 }
             }
         }
@@ -321,10 +323,14 @@ public class QueahBoard extends JPanel {
         public void actionPerformed(ActionEvent e){
             switch (game.gameMode) {
                 case 1:
+                if(game.gameStart==1){
+                    ComputerMove(false);
+                    game.gameStart=0;
+                }
                     HumanMove();
                     break;
                 case 2:
-                    ComputerMove();
+                    ComputerMove(false);
                     break;
                 default:
                     HumanMove();
@@ -347,7 +353,7 @@ public class QueahBoard extends JPanel {
                         if(!(previsRow == row && previsColumn == column)){
                             System.out.println("1");
                             moveSoldier();
-                            if(game.gameMode==1) ComputerMove(); 
+                            if(game.gameMode==1) ComputerMove(false); 
                         }
                     }
                 }
@@ -359,13 +365,15 @@ public class QueahBoard extends JPanel {
                                 System.out.println("2");
                                 removeSoldier(row+1, column);
                                 moveSoldier();
-                                if(game.gameMode==1) ComputerMove(); 
+                                if(game.gameMode==1) ComputerMove(true); 
                             } 
                             else if((previsRow == row-2 && (lBoard[row-1][column] !=turn && lBoard[row-1][column] !=0 ))){
                                 System.out.println("3");
                                 removeSoldier(row-1,column);
                                 moveSoldier();
-                                if(game.gameMode==1) ComputerMove(); 
+                                if(game.gameMode==1){
+                                    ComputerMove(true);
+                                } 
                             } 
                                     
                         }
@@ -374,13 +382,13 @@ public class QueahBoard extends JPanel {
                                 System.out.println("4");
                                 removeSoldier(row, column+1);
                                 moveSoldier();
-                                if(game.gameMode==1) ComputerMove(); 
+                                if(game.gameMode==1) ComputerMove(true); 
                             } 
                             else if((previsColumn == column-2 && (lBoard[row][column-1] !=turn && lBoard[row][column-1] !=0 ))){
                                 System.out.println("5");
                                 removeSoldier(row, column-1);
                                 moveSoldier();
-                                if(game.gameMode==1) ComputerMove(); 
+                                if(game.gameMode==1) ComputerMove(true); 
                             } 
                                     
                         }
@@ -403,33 +411,44 @@ public class QueahBoard extends JPanel {
             System.out.println("previsRow:"+previsRow+" "+"previsColumn:"+previsColumn+" "+"previsButtonPressed:"+previsButtonPressed+" "+"row:"+row+" "+"column:"+column+" "+"player:"+lBoard[row][column]+" "+"turn:"+turn);
         }
 
-        private void ComputerMove(){
+        private void ComputerMove(boolean isEaten){
+            // int isEaten 0|1 to check if the player ate the Computer
+            int tempRow, tempColumn;
             if(playerRed.getSoldier_on_board() == 0) victory(2);
             if(playerBlack.getSoldier_on_board() == 0) victory(1);
 
             int data[];
-            if(turn == playerRed.getPlayer_color() && !playerRed.IsHuman()) data = computerRed.move();
-            else if(turn == playerBlack.getPlayer_color() && !playerBlack.IsHuman()) data = computerBlack.move();
+            if(turn == playerRed.getPlayer_color() && !playerRed.IsHuman()) data = computerRed.move(isEaten);
+            else if(turn == playerBlack.getPlayer_color() && !playerBlack.IsHuman()) data = computerBlack.move(isEaten);
             else{
                 // if(turn==1) turn=2;
                 // else turn=1;
-
+                System.out.println("dont move computer");
                 return;
             }
 
+            tempRow =row;
+            tempColumn = column;
             row = data[0];
             column = data[1];
             previsRow = data[2];
             previsColumn = data[3];
 
-            if(data[6]==0){
+            if(data[6]==0 && !isEaten){
                 moveSoldier();
+            }
+            else if(isEaten){
+                System.out.println("isEaten");
+                addSoldierToBoard();
             }
             else
             {
                 removeSoldier(data[4], data[5]);
                 moveSoldier();
             }
+
+            row=tempRow;
+            column=tempColumn;
         }
     }   
 }
