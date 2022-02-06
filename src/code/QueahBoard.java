@@ -256,9 +256,6 @@ public class QueahBoard extends JPanel {
             repaint();
             if(turn==1) turn=2;
             else turn=1;
-            //System.out.println("lBoard:"+lBoard[2][4]);
-            //System.out.println("previsRow:"+previsRow+" "+"previsColumn:"+previsColumn+" "+"previslBoard:"+lBoard[previsRow][previsColumn]+" "+"row:"+row+" "+"column:"+column+" "+"lBoard:"+lBoard[row][column]);
-            //System.out.println("turn change to " + turn);
         }
 
         public void removeSoldier(int row, int column){
