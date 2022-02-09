@@ -41,6 +41,10 @@ public class QueahBoard extends JPanel {
         initBoard();
     }
 
+
+    //if game mode is 0 red plater and black player is Human
+    //if game mode is 1 red player is Human and black player is computer
+    //if game mod is 2 red player and black player is computer
     private void constrictGamMode(){
         switch (game.gameMode) {
             case 1:
@@ -61,7 +65,7 @@ public class QueahBoard extends JPanel {
         }
     }
 
-
+    //Manege map Size and Heigh
     private void constrictorMap(String map){
         if(map.equals("small")){
             QueahBoard.sizeOfboard = 5;
@@ -77,6 +81,7 @@ public class QueahBoard extends JPanel {
         }
     }
 
+    //Build the map 
     public void initBoard()
 	{
 		gBoard = new GameButton[sizeOfboard][sizeOfboard];
@@ -136,6 +141,7 @@ public class QueahBoard extends JPanel {
     public static void setTurn(int start){
         turn=start;
     }
+
 
     public void smallMapSolid(){
         max_Player_soldiers_on_board=4;
@@ -237,7 +243,7 @@ public class QueahBoard extends JPanel {
             this.column=column;
         }
 
-
+        //if player is victory then create new game      
         public void victory(int player){
             String playerColor;
             if(player==1) playerColor ="red";
@@ -247,7 +253,8 @@ public class QueahBoard extends JPanel {
             game.dispose();
             new Game();
         }
-
+        
+        //move soldier in lBoard and in gBoard and swish turn 
         public void moveSoldier(){
             lBoard[row][column]=lBoard[previsRow][previsColumn];
             lBoard[previsRow][previsColumn] = 0;
@@ -258,6 +265,7 @@ public class QueahBoard extends JPanel {
             else turn=1;
         }
 
+        // remove soldier in lBoard and in gBoard and swish turn and remove from Stack
         public void removeSoldier(int row, int column){
             boolean isRemoveSoldierFromStack;
             if(turn==1){
@@ -293,6 +301,7 @@ public class QueahBoard extends JPanel {
             }
         }
 
+        // add soldier to board
         public void addSoldierToBoard(){
             if(turn==1){
                 playerRed.addSoldierToBoard(max_Player_soldiers_on_board);

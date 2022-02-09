@@ -17,6 +17,7 @@ public class Players extends JPanel {
     public Players(int player_color,String map){
         this.player_color = player_color;
         int soldiers;
+
         if(map.equals("small")){
             soldier_on_board=4;
             soldiers=10;
