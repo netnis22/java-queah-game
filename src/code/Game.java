@@ -34,6 +34,7 @@ public class Game extends JFrame {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setSize(300,350);
 		setVisible(true);
+		setLocationRelativeTo(null);
     }
 
 	private static String getFileInfo(){ 
