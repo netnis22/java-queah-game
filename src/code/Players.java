@@ -10,8 +10,8 @@ public class Players extends JPanel {
     private int soldier_on_board;
     private final int player_color; // 1 red | 2 black 
 
-    private static final ImageIcon RedSoldier = new ImageIcon("src/img/Soldier_red_New.png");
-    private static final ImageIcon BlackSoldier =  new ImageIcon("src/img/Soldier_black_New.png");
+    private static final ImageIcon RedSoldier = new ImageIcon("././img/Soldier_red_New.png");
+    private static final ImageIcon BlackSoldier =  new ImageIcon("././img/Soldier_black_New.png");
     private JLabel img;
 
     public Players(int player_color,String map){

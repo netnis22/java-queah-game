@@ -6,6 +6,6 @@
 	],
 	"settings": {
 		"java.dependency.packagePresentation": "hierarchical",
-		"java.dependency.syncWithFolderExplorer": false
+		"java.dependency.syncWithFolderExplorer": true
 	}
 }

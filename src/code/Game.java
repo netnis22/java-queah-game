@@ -38,7 +38,7 @@ public class Game extends JFrame {
     }
 
 	private static String getFileInfo(){ 
-		String path = "src/Game_Play_and_Rules.txt";
+		String path = "././files/Game_Play_and_Rules.txt";
 
         try {
             String content = Files.readString(Paths.get(path));

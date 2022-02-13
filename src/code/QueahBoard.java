@@ -8,7 +8,7 @@ import javax.swing.*;
 public class QueahBoard extends JPanel {
 
     //img
-    private static final String IMG_BOARD="src/img/Wood.png";
+    private static final String IMG_BOARD="././img/Wood.png";
     ImageIcon icon = new ImageIcon(IMG_BOARD);
 	Image img = icon.getImage();
 
