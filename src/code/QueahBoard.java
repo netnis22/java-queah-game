@@ -142,7 +142,7 @@ public class QueahBoard extends JPanel {
         turn=start;
     }
 
-
+    // function's to set app the map
     public void smallMapSolid(){
         max_Player_soldiers_on_board=4;
 
@@ -243,7 +243,7 @@ public class QueahBoard extends JPanel {
             this.column=column;
         }
 
-        //if player is victory then create new game      
+        //if player is victory display it then dispose of old game and create new game      
         public void victory(int player){
             String playerColor;
             if(player==1) playerColor ="red";
@@ -254,7 +254,7 @@ public class QueahBoard extends JPanel {
             new Game();
         }
         
-        //move soldier in lBoard and in gBoard and swish turn 
+        //move soldier in lBoard and in gBoard and switch turn 
         public void moveSoldier(){
             lBoard[row][column]=lBoard[previsRow][previsColumn];
             lBoard[previsRow][previsColumn] = 0;
@@ -265,7 +265,7 @@ public class QueahBoard extends JPanel {
             else turn=1;
         }
 
-        // remove soldier in lBoard and in gBoard and swish turn and remove from Stack
+        // remove soldier in lBoard and in gBoard and switch turn and remove from Stack
         public void removeSoldier(int row, int column){
             boolean isRemoveSoldierFromStack;
             if(turn==1){
@@ -301,7 +301,7 @@ public class QueahBoard extends JPanel {
             }
         }
 
-        // add soldier to board
+        // add soldier to board and switch turn
         public void addSoldierToBoard(){
             if(turn==1){
                 playerRed.addSoldierToBoard(max_Player_soldiers_on_board);
@@ -326,6 +326,9 @@ public class QueahBoard extends JPanel {
             }
         }
 
+        // if gamemode is 0/default then the gamemode is HumanVSHuman
+        //if gamemode is 1 then the gamemode is HumanVSComputer 
+        //if gamemode is 2 then the gamemode is ComputerVSComputer
         public void actionPerformed(ActionEvent e){
             switch (game.gameMode) {
                 case 1:
@@ -346,12 +349,20 @@ public class QueahBoard extends JPanel {
         }
 
         private void HumanMove(){
+
+            //check if the player is computer and this is His turn if it is then return void
             if(turn == playerRed.getPlayer_color() && (!playerRed.IsHuman())) return;
             if(turn == playerBlack.getPlayer_color() && (!playerBlack.IsHuman())) return;
 
+            //check if the player Won and if it is call the function victory
             if(playerRed.getSoldier_on_board() == 0) victory(2);
             if(playerBlack.getSoldier_on_board() == 0) victory(1);
         
+            /*if soldier was Eaten then call the function addSoldierToBoard.
+            else check If the button is pressed a previous time if pressed the check if
+            the move is valid and if the move was to eat the other player soldier and set the previsButtonPressed to false.
+            if  The button was not pressed once the previous time then check if the button is populated by soldier if it populated then
+            set previsButtonPressed to true and  previsRow=row and previsColumn=column  if it not populated set previsButtonPressed to false*/
             if(isSoldiersEaten) addSoldierToBoard();
             else if(previsButtonPressed){
                 if(((previsRow == row+1 || previsRow == row-1) && previsColumn == column) || ((previsColumn == column+1 || previsColumn == column-1) && previsRow == row )){
@@ -420,19 +431,22 @@ public class QueahBoard extends JPanel {
         private void ComputerMove(boolean isEaten){
             // int isEaten 0|1 to check if the player ate the Computer
             int tempRow, tempColumn;
+            
+            //check if the player Won and if it is call the function victory
             if(playerRed.getSoldier_on_board() == 0) victory(2);
             if(playerBlack.getSoldier_on_board() == 0) victory(1);
 
             int data[];
-            if(turn == playerRed.getPlayer_color() && !playerRed.IsHuman()) data = computerRed.move(isEaten);
-            else if(turn == playerBlack.getPlayer_color() && !playerBlack.IsHuman()) data = computerBlack.move(isEaten);
+            //check if the player is computer and this is His turn if it is then call the function play
+            if(turn == playerRed.getPlayer_color() && !playerRed.IsHuman()) data = computerRed.play(isEaten);
+            else if(turn == playerBlack.getPlayer_color() && !playerBlack.IsHuman()) data = computerBlack.play(isEaten);
             else{
-                // if(turn==1) turn=2;
-                // else turn=1;
                 System.out.println("dont move computer");
                 return;
             }
 
+            //temperary store row and column in tempRow and tempColumn so we can use row and column it in the moveSoldier function
+            //and not destroyed the value of the button 
             tempRow =row;
             tempColumn = column;
             row = data[0];

@@ -9,27 +9,34 @@ public class Computer extends Players {
     }
 
     //return newRow,newColumn,previsRow,previsColumn, eatRow,eatColum, isEat- 1(yes)/0(no)
-    public int[] move(boolean isEaten) {
+    public int[] move(boolean isEaten){
         int test[]=new int[7];
         Scanner scanner = new Scanner(System.in);
+        System.out.println("enter namber not eten:");
+        for(int i=0;i<7;i++){
+            test[i]= Integer.parseInt(scanner.nextLine());
+        }
+         return test;
+    }
 
+    public int[] play(boolean isEaten){
+        int test[]=new int[7];
         if(isEaten){
-            System.out.println("enter namber new solder:");
-            for(int i=0;i<2;i++){
-                test[i]= Integer.parseInt(scanner.nextLine());
-            }
-            for(int i=2;i<7;i++){
-                test[i]= 0;
-            }
-            return test;
+         a
         }
-        else{
-            System.out.println("enter namber not eten:");
-            for(int i=0;i<7;i++){
-                test[i]= Integer.parseInt(scanner.nextLine());
-            }
-            return test;
+    }
+
+    public int[] addNewSolid(){
+        int test[]=new int[7];
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("enter namber new solder:");
+        for(int i=0;i<2;i++){
+            test[i]= Integer.parseInt(scanner.nextLine());
         }
+        for(int i=2;i<7;i++){
+            test[i]= 0;
+        }
+        return test;
     }
 
     @Override
