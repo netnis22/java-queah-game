@@ -8,34 +8,38 @@ public class Computer extends Players {
         super(player_color, map);
     }
 
+    //this function is to manage the computer
+    public int[] play(boolean isEaten){
+        int test[]=new int[7];
+
+        if(isEaten) test=addNewSolid();
+        else test=move();
+
+        return test;
+    }
+
     //return newRow,newColumn,previsRow,previsColumn, eatRow,eatColum, isEat- 1(yes)/0(no)
-    public int[] move(boolean isEaten){
+    //this function is for the computer to move the soldier
+    public int[] move(){
         int test[]=new int[7];
         Scanner scanner = new Scanner(System.in);
         System.out.println("enter namber not eten:");
-        for(int i=0;i<7;i++){
-            test[i]= Integer.parseInt(scanner.nextLine());
-        }
-         return test;
+        
+        for(int i=0;i<7;i++) test[i]= Integer.parseInt(scanner.nextLine());
+
+        return test;
     }
 
-    public int[] play(boolean isEaten){
-        int test[]=new int[7];
-        if(isEaten){
-         a
-        }
-    }
-
+    //return newRow,newColumn,0,0,0,0,0
+    //this function is for the computer to add new soldier if soldier is eaten
     public int[] addNewSolid(){
         int test[]=new int[7];
         Scanner scanner = new Scanner(System.in);
         System.out.println("enter namber new solder:");
-        for(int i=0;i<2;i++){
-            test[i]= Integer.parseInt(scanner.nextLine());
-        }
-        for(int i=2;i<7;i++){
-            test[i]= 0;
-        }
+
+        for(int i=0;i<2;i++) test[i]= Integer.parseInt(scanner.nextLine());
+        for(int i=2;i<7;i++) test[i]= 0;
+
         return test;
     }
 
