@@ -2,6 +2,10 @@ package code;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 import javax.swing.*;
 
 
@@ -134,7 +138,8 @@ public class QueahBoard extends JPanel {
             for (int column = 0; column < sizeOfboard; column ++) {
                 add(gBoard[row][column]);
             }
-        }		
+        }
+        addWeight();		
 		turn=startPlayer;
 	}
 
@@ -229,6 +234,60 @@ public class QueahBoard extends JPanel {
         lBoard[5][1] = 1;
         gBoard[4][1].setSoldier(redSoldier);
         lBoard[4][1] = 1;
+    }
+
+    private String getFileInfoMap(){ 
+
+        String path;
+
+        switch (game.map) {
+            case "small":
+                path = "././files/smallMap.txt";
+                break;
+            case "mid":
+                path = "././files/midMap.txt";
+                break;
+            case "large":
+                path = "././files/largeMap.txt";
+                break;
+
+            default:
+                path = "././files/smallMap.txt";
+                break;
+        }
+
+        try {
+            String content = Files.readString(Paths.get(path));
+            return content;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+		return null;
+	}
+
+    private int[][] readWeightFile(){
+        int[][] weight=new int[sizeOfboard][sizeOfboard];
+        String content = getFileInfoMap();
+        String[] num = content.split(" ");
+
+        int count = 0;
+        for(int r=0;r<sizeOfboard;r++){
+            for(int c=0;c<sizeOfboard;c++){
+                weight[r][c]= (int) Integer.parseInt(num[count++]);
+                System.out.print(weight[r][c]+" ");
+            }
+            System.out.println();
+        }
+        return weight;
+    }
+
+    private void addWeight(){
+        int[][] weight=readWeightFile();
+        for(int i=0; i<sizeOfboard; i++){
+            for(int j=0; j<sizeOfboard; j++){
+                gBoard[i][j].setWeight(weight[i][j]);
+            }
+        }
     }
 
     class AL implements ActionListener{
@@ -438,8 +497,8 @@ public class QueahBoard extends JPanel {
 
             int data[];
             //check if the player is computer and this is His turn if it is then call the function play
-            if(turn == playerRed.getPlayer_color() && !playerRed.IsHuman()) data = computerRed.play(isEaten);
-            else if(turn == playerBlack.getPlayer_color() && !playerBlack.IsHuman()) data = computerBlack.play(isEaten);
+            if(turn == playerRed.getPlayer_color() && !playerRed.IsHuman()) data = computerRed.play(isEaten,lBoard);
+            else if(turn == playerBlack.getPlayer_color() && !playerBlack.IsHuman()) data = computerBlack.play(isEaten,lBoard);
             else{
                 System.out.println("dont move computer");
                 return;

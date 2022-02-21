@@ -9,7 +9,7 @@ public class Computer extends Players {
     }
 
     //this function is to manage the computer
-    public int[] play(boolean isEaten){
+    public int[] play(boolean isEaten,int [][]lBoard){
         int test[]=new int[7];
 
         if(isEaten) test=addNewSolid();

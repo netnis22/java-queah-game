@@ -8,12 +8,13 @@ public class GameButton extends JButton {
 
 	private Image img;
 	private Soldier soldier=null;
+	private int weight=0;
 
 	public GameButton(Image img,Soldier soldier) {
 		this.img=img;
 		this.soldier=soldier;
 	}
-	
+
 	public GameButton(Image img){
 		this.img=img;
 	}
@@ -31,6 +32,14 @@ public class GameButton extends JButton {
 	
 	public void setImg(Image img){
 		this.img = img;
+	}
+
+	public int getWeight() {
+		return weight;
+	}
+
+	public void setWeight(int weight) {
+		this.weight = weight;
 	}
 
 	public Soldier getSoldier(){
