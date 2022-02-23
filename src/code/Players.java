@@ -6,9 +6,9 @@ import javax.swing.JPanel;
 
 public class Players extends JPanel {
 
-    private int soldier_left;
-    private int soldier_on_board;
-    private final int player_color; // 1 red | 2 black 
+    protected int soldier_left;
+    protected int soldier_on_board;
+    protected final int player_color; // 1 red | 2 black 
 
     private static final ImageIcon RedSoldier = new ImageIcon("././img/Soldier_red_New.png");
     private static final ImageIcon BlackSoldier =  new ImageIcon("././img/Soldier_black_New.png");
