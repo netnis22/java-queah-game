@@ -5,16 +5,16 @@ import java.util.Set;
 public class Coordinate {
     private int row,column;
 
-    public Coordinate(int row, int y) {
+    public Coordinate(int row, int column) {
         this.row = row;
-        this.column = y;
+        this.column = column;
     }
 
-    public void SetX(int row){
+    public void setRow(int row){
         this.row=row;
     }
-    public void SetColumn(int y){
-        this.column=y;
+    public void setColumn(int column){
+        this.column=column;
     }
 
     public int getRow(){
