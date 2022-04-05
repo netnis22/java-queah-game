@@ -483,13 +483,14 @@ public class QueahBoard extends JPanel {
                 previsRow=row;
                 previsColumn=column;
             }
+
             //debag:
-            System.out.println("previsRow:"+previsRow+" "+"previsColumn:"+previsColumn+" "+"previsButtonPressed:"+previsButtonPressed+" "+"row:"+row+" "+"column:"+column+" "+"player:"+lBoard[row][column]+" "+"turn:"+turn);
+            //System.out.println("previsRow:"+previsRow+" "+"previsColumn:"+previsColumn+" "+"previsButtonPressed:"+previsButtonPressed+" "+"row:"+row+" "+"column:"+column+" "+"player:"+lBoard[row][column]+" "+"turn:"+turn);
         }
 
         private void ComputerMove(boolean isEaten){
             // int isEaten 0|1 to check if the player ate the Computer
-            int tempRow, tempColumn;
+            int tempRow, tempColumn,tempPrevisRow,tempPrevisColumn;
             
             //check if the player Won and if it is call the function victory
             if(playerRed.getSoldier_on_board() == 0) victory(2);
@@ -497,10 +498,10 @@ public class QueahBoard extends JPanel {
 
             int data[];
             //check if the player is computer and this is His turn if it is then call the function play
-            if(turn == playerRed.getPlayer_color() && !playerRed.IsHuman()) data = computerRed.play(isEaten,lBoard,gBoard);
-            else if(turn == playerBlack.getPlayer_color() && !playerBlack.IsHuman()) data = computerBlack.play(isEaten,lBoard,gBoard);
+            if(turn == playerRed.getPlayer_color() && !playerRed.IsHuman()) data = computerRed.play(isEaten,lBoard,gBoard,playerRed);
+            else if(turn == playerBlack.getPlayer_color() && !playerBlack.IsHuman()) data = computerBlack.play(isEaten,lBoard,gBoard,playerBlack);
             else{
-                System.out.println("dont move computer");
+                //System.out.println("dont move computer");
                 return;
             }
 
@@ -508,26 +509,36 @@ public class QueahBoard extends JPanel {
             //and not destroyed the value of the button 
             tempRow =row;
             tempColumn = column;
+            tempPrevisRow = previsRow;
+            tempPrevisColumn = previsColumn;
             row = data[0];
             column = data[1];
             previsRow = data[2];
             previsColumn = data[3];
 
-            if(data[6]==0 && !isEaten){
+            if(data[6]==0 && (!isEaten||data[7]==0)){
+                System.out.println("move soldier");
                 moveSoldier();
             }
-            else if(isEaten){
-                System.out.println("isEaten");
+            else if(isEaten && data[7]==1){
+                System.out.println("addSoldierToBoard");
                 addSoldierToBoard();
             }
             else
             {
+                System.out.println("eat soldier");
                 removeSoldier(data[4], data[5]);
                 moveSoldier();
             }
 
             row=tempRow;
             column=tempColumn;
+            previsRow=tempPrevisRow;
+            previsColumn=tempPrevisColumn;
+
+            //check if the player Won and if it is call the function victory
+            if(playerRed.getSoldier_on_board() == 0) victory(2);
+            if(playerBlack.getSoldier_on_board() == 0) victory(1);
         }
     }   
 }

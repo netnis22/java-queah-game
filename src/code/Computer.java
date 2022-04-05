@@ -8,194 +8,124 @@ import java.util.*;
 
 public class Computer extends Players {
 
-    private int turn;
+    private int player_color; //1 red 2 black
+    private Stack<SoldierMoves> soldierMovesStack;
+    private int [][]lBoard;
+    private GameButton [][]gBoard;
+    private Players player;
+    private int isSoldierNotLeftFirstTime;
 
     public Computer(int player_color, String map) {
         super(player_color, map);
-        turn=player_color;
+        this.player_color = player_color;
+        isSoldierNotLeftFirstTime =0;
+        soldierMovesStack = new Stack<SoldierMoves>();
     }
 
-    //this function is to manage the computer
-    public int[] play(boolean isEaten,int [][]lBoard,GameButton [][]gBoard){
-        int test[]=new int[7];
+    //this function is to manage the computer,isSoldierLeft-1(yes)/0(no)
+    public int[] play(boolean isEaten,int [][]lBoard,GameButton [][]gBoard,Players player) {
+        int test[]=new int[8];
+        this.lBoard=lBoard;
+        this.gBoard=gBoard;
+        this.player=player;
 
-        if(isEaten) test=addNewSolid(lBoard,gBoard);
-        else test=move(lBoard,gBoard);
+        if(player.getSoldierLeft()==0) isSoldierNotLeftFirstTime++;
+
+        if(isEaten && isSoldierNotLeftFirstTime<=1) test=addNewSolid();
+        else test=move();
+
+        soldierMovesStack.clear();
 
         return test;
     }
 
-    //find all the soldier of the computer that is not stuck
-    private Stack<Coordinate> findAllPossibleSoldier(int [][]lBoard,GameButton [][]gBoard){
-        Stack<Coordinate> comSoldierStack = new Stack<Coordinate>();
-        for(int i=0;i<lBoard.length;i++){
-            for(int j=0;j<lBoard.length;j++){
-                if(lBoard[i][j]==player_color){
-                    if(isPlaterStuck(lBoard,i,j)) continue;
-                    comSoldierStack.push(new Coordinate(i,j));
-                }
-            }
-        }
-        return comSoldierStack;
-    }
-
-    //return newRow,newColumn,previsRow,previsColumn, eatRow,eatColum, isEat- 1(yes)/0(no)
-    //this function is for the computer to move the soldier
-    private int[] move(int [][]lBoard,GameButton [][]gBoard){
-        int test[]=new int[7];
-        Stack<Coordinate> comSoldierStack = findAllPossibleSoldier(lBoard, gBoard);
-        
-        // int[][] copyLBoard = lBoard;
-        // GameButton[][] copyGBoard=gBoard;
-
-        int row ,column;
-        Coordinate soldierCoordinate,newCoordinate;
-
-
-        while(!comSoldierStack.isEmpty()){
-            int conter=0;
-            Coordinate afterEatCoordinate=null;
-
-            boolean isEat=false;
-            boolean isValidMove=false;
-
-            row = (int)(Math.random()*lBoard.length);
-            column = (int)(Math.random()*lBoard.length);
-            
-            newCoordinate=new Coordinate(row, column);
-            soldierCoordinate=comSoldierStack.pop();
-
-            do{
-                conter++;
-                row = (int)(Math.random()*lBoard.length);
-                column = (int)(Math.random()*lBoard.length);
-                newCoordinate=new Coordinate(row, column);
-                isValidMove=isValidMove(lBoard, soldierCoordinate, newCoordinate);
-                // afterEatCoordinate=canEat(lBoard, soldierCoordinate, newCoordinate);
-                // if((afterEatCoordinate.getRow()!=-1 && afterEatCoordinate.getColumn()!=-1)) isEat=true;
-                // if(isEat) break;
-                //System.out.println("newCoordinate: "+newCoordinate.getRow()+" "+newCoordinate.getColumn());
-            }while(!isValidMove || conter<1000000);
-
-            if(conter==100) continue;
-
-            test[2]=soldierCoordinate.getRow();
-            test[3]=soldierCoordinate.getColumn();
-            test[0]=newCoordinate.getRow();
-            test[1]=newCoordinate.getColumn();
-            for(int k=4;k<test.length;k++){
-                test[k]=0;
-            }
-
-
-            // if(!isValidMove && isEat){
-            //     System.out.println("heee");
-            //     test[0]=afterEatCoordinate.getRow();
-            //     test[1]=afterEatCoordinate.getColumn();
-            //     test[4]=newCoordinate.getRow();
-            //     test[5]=newCoordinate.getColumn();
-            //     test[6]=1;
-            // }
-            // if(isValidMove && !isEat){
-            //     System.out.println("nnnnnn");
-            //     test[0]=newCoordinate.getRow();
-            //     test[1]=newCoordinate.getColumn();
-            //     for(int k=4;k<test.length;k++){
-            //         test[k]=0;
-            //     }
-            // }
-
-            for(int i=0;i<test.length;i++){
-                System.out.print(test[i]+" ");
-            }
-            System.out.println();
-            
-            return test;
-        }
-        return test;
-    }
-
-    private Coordinate canEat(int [][]lBoard, Coordinate SoldierCoordinate, Coordinate newCoordinate){
-        Coordinate eatCoordinate = new Coordinate(-1,-1);
-        int previousRow=SoldierCoordinate.getColumn();
-        int previousColumn=SoldierCoordinate.getRow();
-        int newColumn=newCoordinate.getColumn();
-        int newRow=newCoordinate.getRow();
-
-        if(!(previousRow == newRow && previousColumn == newColumn)){
-            if(previousColumn == newColumn){
-                if((previousRow == newRow+2 && (lBoard[newRow+1][newColumn] !=turn && lBoard[newRow+1][newColumn] !=0 ))){
-                    eatCoordinate.setRow(newRow+2);
-                    eatCoordinate.setColumn(newColumn);
-                    return eatCoordinate;
-                } 
-                else if((previousRow == newRow-2 && (lBoard[newRow-1][newColumn] !=turn && lBoard[newRow-1][newColumn] !=0 ))){
-                    eatCoordinate.setRow(newRow-2);
-                    eatCoordinate.setColumn(newColumn);
-                    return eatCoordinate;
-                } 
-                        
-            }
-            else if(previousRow == newRow){
-                if((previousColumn == newColumn+2 && (lBoard[newRow][newColumn+1] !=turn && lBoard[newRow][newColumn+1] !=0 ))){
-                    eatCoordinate.setRow(newRow);
-                    eatCoordinate.setColumn(newColumn+2);
-                    return eatCoordinate;
-                } 
-                else if((previousColumn == newColumn-2 && (lBoard[newRow][newColumn-1] !=turn && lBoard[newRow][newColumn-1] !=0 ))){
-                    eatCoordinate.setRow(newRow);
-                    eatCoordinate.setColumn(newColumn-2);
-                    return eatCoordinate;
-                } 
-                        
-            }
-        }
-        return eatCoordinate;
-    }
-
-    private boolean isValidMove(int [][]lBoard, Coordinate SoldierCoordinate, Coordinate newCoordinate){
-         
-        int previousRow=SoldierCoordinate.getColumn();
-        int previousColumn=SoldierCoordinate.getRow();
-        int newColumn=newCoordinate.getColumn();
-        int newRow=newCoordinate.getRow();
-        
-        if(((previousRow == newRow+1 || previousRow == newRow-1) && previousColumn == newColumn) || ((previousColumn == newColumn+1 || previousColumn == newColumn-1) && previousRow == newRow )){
-            if(lBoard[newRow][newColumn] == 0){
-                if(!(previousRow == newRow && previousColumn == newColumn)){
-                    return true; 
-                }
-            }
-        }
-
-
-        return false;
-    }
-
-    private boolean isPlaterStuck(int[][] lBoard,int row,int column){
-        if((column-1<0 || lBoard[row][column-1] !=0) && (column+1>lBoard.length || lBoard[row][column+1] !=0) && (row+1>lBoard.length || lBoard[row+1][column] !=0) && (row-1<0 || lBoard[row-1][column] !=0)) return true;
-        return false;
-    }
-
-    
-    //return newRow,newColumn,0,0,0,0,0
+    //return newRow,newColumn,0,0,0,0,0,0
     //this function is for the computer to add new soldier if soldier is eaten
-    private int[] addNewSolid(int [][]lBoard,GameButton [][]gBoard){
-        int[][] copyLBoard = lBoard;
-        int test[]=new int[7];
-        int data[]=findMostWeightBlock(copyLBoard,gBoard);
-
+    private int[] addNewSolid(){
+        int test[]=new int[8];
+        int data[]=findMostWeightBlock();
 
         test[0]=data[0];
         test[1]=data[1];
 
-        for(int i=2;i<7;i++) test[i]= 0;
+        System.out.println(player.getSoldierLeft()!=0);
+        if(isSoldierNotLeftFirstTime<=1) test[7]=1;
+        else test[7]=0;
 
+        for(int i=2;i<7;i++) test[i]= 0;
         return test;
     }
 
+
+    //return newRow,newColumn,previsRow,previsColumn, eatRow,eatColum, isEat- 1(yes)/0(no), isSoldierLeft-1(yes)/0(no)
+    //this function is for the computer to move the soldier
+    private int[] move(){
+        int test[]=new int[8];
+        Stack<SoldierMoves> copySoldierMovesStack=new Stack<SoldierMoves>();
+        Stack<SoldierMoves> eatSoldierMovesStack=new Stack<SoldierMoves>();
+
+        findAllPossibleSoldier();
+
+        copyStack(copySoldierMovesStack,soldierMovesStack);
+
+        while(!copySoldierMovesStack.isEmpty()){
+            if(!copySoldierMovesStack.peek().getPossibleEatMoves().isEmpty()) eatSoldierMovesStack.push(copySoldierMovesStack.peek());
+            copySoldierMovesStack.pop();
+        }
+
+        if(!eatSoldierMovesStack.isEmpty()){
+            System.out.println("eat");
+            test[0]=eatSoldierMovesStack.peek().getPossibleEatMoves().get(0)[0].getRow();
+            test[1]=eatSoldierMovesStack.peek().getPossibleEatMoves().get(0)[0].getColumn();
+            test[2]=eatSoldierMovesStack.peek().getsoldierCoordinate().getRow();
+            test[3]=eatSoldierMovesStack.peek().getsoldierCoordinate().getColumn();
+            test[4]=eatSoldierMovesStack.peek().getPossibleEatMoves().get(0)[1].getRow();
+            test[5]=eatSoldierMovesStack.peek().getPossibleEatMoves().get(0)[1].getColumn();
+            test[6]=1;
+        }
+        else{
+            System.out.println("move");
+            test[0]=soldierMovesStack.peek().getPossibleMoves().get(0).getRow();
+            test[1]=soldierMovesStack.peek().getPossibleMoves().get(0).getColumn();
+            test[2]=soldierMovesStack.peek().getsoldierCoordinate().getRow();
+            test[3]=soldierMovesStack.peek().getsoldierCoordinate().getColumn();
+            test[4]=0;
+            test[5]=0;
+            test[6]=0;
+        }
+
+        if(isSoldierNotLeftFirstTime<=1) test[7]=1;
+        else test[7]=0;
+        
+        return test;
+    }
+
+    private void copyStack(Stack<SoldierMoves> copySoldierMovesStack,Stack<SoldierMoves> soldierMovesStack){
+        Stack<SoldierMoves> copySoldierMovesStack2=new Stack<SoldierMoves>();
+        while(!soldierMovesStack.isEmpty()){
+            copySoldierMovesStack.push(soldierMovesStack.peek());
+            copySoldierMovesStack2.push(soldierMovesStack.pop());
+        }
+
+        while(!copySoldierMovesStack2.isEmpty()) soldierMovesStack.push(copySoldierMovesStack2.pop());            
+
+    }
+
+    //find all the soldier of the computer that is not stuck
+    private void findAllPossibleSoldier(){
+        for(int i=0;i<lBoard.length;i++){
+            for(int j=0;j<lBoard.length;j++){
+                if(lBoard[i][j]==player_color){
+                    soldierMovesStack.push(new SoldierMoves(lBoard,gBoard,new Coordinate(i,j,player_color)));
+                    if(soldierMovesStack.peek().isSoldierStuck()) soldierMovesStack.pop();
+                }
+            }
+        }
+    }
+
+    
     //this function is to find the max weight coordinate
-    private int[] findMostWeightBlock(int [][]lBoard,GameButton [][]gBoard){
+    private int[] findMostWeightBlock(){
         int data[]=new int[3];
         int weight=0;
         for(int i=0;i<lBoard.length;i++){

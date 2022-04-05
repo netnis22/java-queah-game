@@ -1,13 +1,16 @@
 package code;
 
-import java.util.Set;
-
 public class Coordinate {
-    private int row,column;
+    private int row,column,value;
 
-    public Coordinate(int row, int column) {
+    public Coordinate(int row, int column,int value) {
         this.row = row;
         this.column = column;
+        this.value=value; //-1 null 0 empty 1 red 2 black
+    }
+
+    public void setValue(int value) {
+        this.value = value;
     }
 
     public void setRow(int row){
@@ -22,5 +25,9 @@ public class Coordinate {
     }
     public int getColumn(){
         return column;
-    }    
+    }  
+    
+    public int getValue() {
+        return value;
+    }
 }
