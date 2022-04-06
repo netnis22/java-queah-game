@@ -1,23 +1,28 @@
 package code;
 
-import java.util.Scanner;
-import java.awt.*;
-import java.io.*;
-
-import java.util.*;
+import java.util.List;
+import java.util.Stack;
 
 public class Computer extends Players {
 
+    private final int difficulty;
     private int player_color; //1 red 2 black
-    private Stack<SoldierMoves> soldierMovesStack;
-    private int [][]lBoard;
-    private GameButton [][]gBoard;
-    private Players player;
     private int isSoldierNotLeftFirstTime;
 
-    public Computer(int player_color, String map) {
+    private int [][]lBoard;
+    private GameButton [][]gBoard;
+
+    private Stack<SoldierMoves> soldierMovesStack;
+    
+    private Players player;
+    
+    
+
+    public Computer(int player_color, String map,int difficulty) {
         super(player_color, map);
         this.player_color = player_color;
+        this.difficulty=difficulty;
+
         isSoldierNotLeftFirstTime =0;
         soldierMovesStack = new Stack<SoldierMoves>();
     }
@@ -48,7 +53,6 @@ public class Computer extends Players {
         test[0]=data[0];
         test[1]=data[1];
 
-        System.out.println(player.getSoldierLeft()!=0);
         if(isSoldierNotLeftFirstTime<=1) test[7]=1;
         else test[7]=0;
 
@@ -61,6 +65,9 @@ public class Computer extends Players {
     //this function is for the computer to move the soldier
     private int[] move(){
         int test[]=new int[8];
+        int index;
+        int size;
+        Coordinate soldierCoordinate;
         Stack<SoldierMoves> copySoldierMovesStack=new Stack<SoldierMoves>();
         Stack<SoldierMoves> eatSoldierMovesStack=new Stack<SoldierMoves>();
 
@@ -73,36 +80,56 @@ public class Computer extends Players {
             copySoldierMovesStack.pop();
         }
         
-        int index;
+        
         if(!eatSoldierMovesStack.isEmpty()){
             System.out.println("eat");
 
-            int size = eatSoldierMovesStack.peek().getPossibleEatMoves().size();
-            index=(int)(Math.random()*(size-1));
+            List<Coordinate[]> possibleEatMoves;
+
+            if(difficulty == 0) popRandom(eatSoldierMovesStack);
+            else popBestEat(eatSoldierMovesStack);
+
+            possibleEatMoves=eatSoldierMovesStack.peek().getPossibleEatMoves();
+            soldierCoordinate=eatSoldierMovesStack.peek().getSoldierCoordinate();
+
+            size = possibleEatMoves.size();
+
+            if(difficulty == 0) index=(int)(Math.random()*(size-1));
+            else index=indexOfBestEat(possibleEatMoves);
             //System.out.println("index:"+index+" size-1:"+(size-1));
 
-            test[0]=eatSoldierMovesStack.peek().getPossibleEatMoves().get(index)[0].getRow();
-            test[1]=eatSoldierMovesStack.peek().getPossibleEatMoves().get(index)[0].getColumn();
-            test[2]=eatSoldierMovesStack.peek().getsoldierCoordinate().getRow();
-            test[3]=eatSoldierMovesStack.peek().getsoldierCoordinate().getColumn();
-            test[4]=eatSoldierMovesStack.peek().getPossibleEatMoves().get(index)[1].getRow();
-            test[5]=eatSoldierMovesStack.peek().getPossibleEatMoves().get(index)[1].getColumn();
-            test[6]=1;
+            test[0] = possibleEatMoves.get(index)[0].getRow();
+            test[1] = possibleEatMoves.get(index)[0].getColumn();
+            test[2] = soldierCoordinate.getRow();
+            test[3] = soldierCoordinate.getColumn();
+            test[4] = possibleEatMoves.get(index)[1].getRow();
+            test[5] = possibleEatMoves.get(index)[1].getColumn();
+            test[6] = 1;
         }
         else{
             System.out.println("move");
             
-            int size = soldierMovesStack.peek().getPossibleMoves().size();
-            index=(int)(Math.random()*(size-1));
+            List<Coordinate> possibleMoves;
+
+            if(difficulty == 0) popRandom(soldierMovesStack);
+            else popBestMove(soldierMovesStack);
+
+            possibleMoves=soldierMovesStack.peek().getPossibleMoves();
+            soldierCoordinate=soldierMovesStack.peek().getSoldierCoordinate();
+
+            size = soldierMovesStack.peek().getPossibleMoves().size();
+
+            if(difficulty == 0) index=(int)(Math.random()*(size-1));
+            else index=indexOfBestMove(possibleMoves);
             //System.out.println("index:"+index+" size-1:"+(size-1));
 
-            test[0]=soldierMovesStack.peek().getPossibleMoves().get(index).getRow();
-            test[1]=soldierMovesStack.peek().getPossibleMoves().get(index).getColumn();
-            test[2]=soldierMovesStack.peek().getsoldierCoordinate().getRow();
-            test[3]=soldierMovesStack.peek().getsoldierCoordinate().getColumn();
-            test[4]=0;
-            test[5]=0;
-            test[6]=0;
+            test[0] = possibleMoves.get(index).getRow();
+            test[1] = possibleMoves.get(index).getColumn();
+            test[2] = soldierCoordinate.getRow();
+            test[3] = soldierCoordinate.getColumn();
+            test[4] = 0;
+            test[5] = 0;
+            test[6] = 0;
         }
 
         if(isSoldierNotLeftFirstTime<=1) test[7]=1;
@@ -111,12 +138,38 @@ public class Computer extends Players {
         return test;
     }
 
-    private void printTest(int[] test){
-        for (int i : test) {
-            System.out.print(i+" ");
+    //this function pop the best move from the stack
+    private void popBestMove(Stack<SoldierMoves> soldierMovesStack2){
+
+    }
+    //this function return the index of the best move in the list
+    private int indexOfBestMove(List<Coordinate> possibleMoves){
+
+        return 0;
+    }
+
+    //this function pop the best eat move from the stack
+    private void popBestEat(Stack<SoldierMoves> eatSoldierMovesStack){
+        
+    }
+
+    //this function retun the best index of the possible Eat moves in the list
+    private int indexOfBestEat(List<Coordinate[]> possibleEatMoves){
+
+        return 0;
+    }
+
+    //this function is pop random soldierMoves from stack
+    private void popRandom(Stack<SoldierMoves> stack){
+        int numOfpop=(int)(Math.random()*(stack.size()));
+
+        while(numOfpop>0){
+            stack.pop();
+            numOfpop--;
         }
     }
 
+    //this function is copy stack from one stack to another
     private void copyStack(Stack<SoldierMoves> copySoldierMovesStack,Stack<SoldierMoves> soldierMovesStack){
         Stack<SoldierMoves> copySoldierMovesStack2=new Stack<SoldierMoves>();
         while(!soldierMovesStack.isEmpty()){
@@ -140,7 +193,6 @@ public class Computer extends Players {
         }
     }
 
-    
     //this function is to find the max weight coordinate
     private int[] findMostWeightBlock(){
         int data[]=new int[3];
@@ -156,6 +208,13 @@ public class Computer extends Players {
         }
 
         return data;
+    }
+
+    //this function is printing test
+    private void printTest(int[] test){
+        for (int i : test) {
+            System.out.print(i+" ");
+        }
     }
 
     @Override

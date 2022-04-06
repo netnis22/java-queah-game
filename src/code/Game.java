@@ -11,9 +11,12 @@ import javax.swing.SwingUtilities;
 public class Game extends JFrame {
 
     public String map;
+
 	public int turn;
 	public int gameMode=0;
 	public int gameStart=1;
+	private int difficultyComputer1; // 0 easy | 1 medium | 2 hard
+	private int difficultyComputer2; // 0 easy | 1 medium | 2 hard
 
 	public Players playerRed;
 	public Players playerBlack;
@@ -143,22 +146,88 @@ public class Game extends JFrame {
 				break;
 			case 1:
 				gameMode = 1;
+				difficultyComputer2();
 				playerRed =  new Players(1,map);
-				computerBlack =new Computer(2,map);
+				computerBlack =new Computer(2,map,difficultyComputer2);
 				board = new QueahBoard(Game.this);
 				add(playerRed,BorderLayout.NORTH);
 				add(computerBlack,BorderLayout.SOUTH);
 				break;
 			case  2:
 				gameMode = 2;
-				computerRed = new Computer(1,map);
-				computerBlack = new Computer(2,map);
+				difficultyComputer1();
+				computerRed = new Computer(1,map,difficultyComputer1);
+				computerBlack = new Computer(2,map,difficultyComputer2);
 				board = new QueahBoard(Game.this);
 				add(computerRed,BorderLayout.NORTH);
 				add(computerBlack,BorderLayout.SOUTH);
 				break;
 			case 3:
 				startMap();
+				break;
+			default:
+				break;		
+		}
+    }
+
+	private void difficultyComputer1(){
+		String[] options =  {"eazy", "medium","hard","Back"};
+		int response = JOptionPane.showOptionDialog(null, "what difficulty computer 1?", 
+				"difficulty For Computer 1",
+				JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
+				null, options, options[0]);
+		
+		switch(response)
+		{
+			case -1:
+				System.out.println("difficulty Dialog Window Was Closed");
+				System.exit(0);
+			
+			case 0:
+				difficultyComputer1 = 0;
+				difficultyComputer2();
+				break;
+			case 1:
+				difficultyComputer1 = 1;
+				difficultyComputer2();
+				break;
+			case  2:
+				difficultyComputer1 = 2;
+				difficultyComputer2();
+				break;
+			case 3:
+				gameModeMenu();
+				break;
+			default:
+				break;		
+		}
+    }
+
+	private void difficultyComputer2(){
+		String[] options =  {"eazy", "medium","hard","Back"};
+		int response = JOptionPane.showOptionDialog(null, "what difficulty computer 2?", 
+				"difficulty For Computer 2",
+				JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
+				null, options, options[0]);
+		
+		switch(response)
+		{
+			case -1:
+				System.out.println("difficulty Dialog Window Was Closed");
+				System.exit(0);
+			
+			case 0:
+				difficultyComputer2 = 0;
+				break;
+			case 1:
+				difficultyComputer2 = 1;
+				break;
+			case  2:
+				difficultyComputer2 = 2;
+				break;
+			case 3:
+				if(gameMode == 1) gameModeMenu();
+				else difficultyComputer1();
 				break;
 			default:
 				break;		

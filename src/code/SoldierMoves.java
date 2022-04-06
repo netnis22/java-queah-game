@@ -4,17 +4,20 @@ import java.util.*;
 
 public class SoldierMoves {
 
+    private int player_color;
+
+    private int [][]lBoard;
+    private GameButton [][]gBoard;
+
     private Coordinate up, down, left, right;
     private Coordinate[] twoUp, twoDown, twoLeft, twoRight;
+    private Coordinate soldierCoordinate;
+
     private List<Coordinate> possibleMoves;
     private List<Coordinate[]> possibleEatMoves;
     private List<Coordinate> coordinatesOfEnemySoldiercanNotEat;
     
-    private Coordinate soldierCoordinate;
-    private int [][]lBoard;
-    private GameButton [][]gBoard;
-    private int player_color;
-
+    //this function is a constructor
     public SoldierMoves(int [][]lBoard,GameButton [][]gBoard,Coordinate soldierCoordinate){
         this.lBoard=lBoard;
         this.gBoard=gBoard;
@@ -32,6 +35,7 @@ public class SoldierMoves {
         findCoordinatesOfEnemySoldiercanNotEat();
     }
 
+    //this function scann the map and update the directions and the Two_directions
     public void scannMap(){
         if(soldierCoordinate.getRow()+1>=lBoard.length) up=new Coordinate(-1,-1,-1);
         else up=new Coordinate(soldierCoordinate.getRow()+1,soldierCoordinate.getColumn(),lBoard[soldierCoordinate.getRow()+1][soldierCoordinate.getColumn()]);
@@ -159,7 +163,7 @@ public class SoldierMoves {
         return possibleMoves;
     }
 
-    public Coordinate getsoldierCoordinate() {
+    public Coordinate getSoldierCoordinate() {
         return soldierCoordinate;
     }
 

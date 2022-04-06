@@ -274,9 +274,9 @@ public class QueahBoard extends JPanel {
         for(int r=0;r<sizeOfboard;r++){
             for(int c=0;c<sizeOfboard;c++){
                 weight[r][c]= (int) Integer.parseInt(num[count++]);
-                System.out.print(weight[r][c]+" ");
+                // System.out.print(weight[r][c]+" ");
             }
-            System.out.println();
+            // System.out.println();
         }
         return weight;
     }
