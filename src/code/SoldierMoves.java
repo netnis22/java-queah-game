@@ -162,4 +162,9 @@ public class SoldierMoves {
     public Coordinate getsoldierCoordinate() {
         return soldierCoordinate;
     }
+
+    @Override
+    public String toString(){
+        return("\n"+"up:"+up+" down:"+down+" left:"+left+" right:"+right+"\n"+"twoUp:"+twoUp[0]+" twoDown:"+twoDown[0]+" twoLeft:"+twoLeft[0]+" twoRight"+twoRight[0]+"\n"+"possibleMoves:"+possibleMoves+"\n"+"possibleEatMoves:"+possibleEatMoves+"\n"+"coordinatesOfEnemySoldiercanNotEat:"+coordinatesOfEnemySoldiercanNotEat+"\n"+"soldierCoordinate:"+soldierCoordinate);
+    }
 }

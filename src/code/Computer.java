@@ -72,21 +72,32 @@ public class Computer extends Players {
             if(!copySoldierMovesStack.peek().getPossibleEatMoves().isEmpty()) eatSoldierMovesStack.push(copySoldierMovesStack.peek());
             copySoldierMovesStack.pop();
         }
-
+        
+        int index;
         if(!eatSoldierMovesStack.isEmpty()){
             System.out.println("eat");
-            test[0]=eatSoldierMovesStack.peek().getPossibleEatMoves().get(0)[0].getRow();
-            test[1]=eatSoldierMovesStack.peek().getPossibleEatMoves().get(0)[0].getColumn();
+
+            int size = eatSoldierMovesStack.peek().getPossibleEatMoves().size();
+            index=(int)(Math.random()*(size-1));
+            //System.out.println("index:"+index+" size-1:"+(size-1));
+
+            test[0]=eatSoldierMovesStack.peek().getPossibleEatMoves().get(index)[0].getRow();
+            test[1]=eatSoldierMovesStack.peek().getPossibleEatMoves().get(index)[0].getColumn();
             test[2]=eatSoldierMovesStack.peek().getsoldierCoordinate().getRow();
             test[3]=eatSoldierMovesStack.peek().getsoldierCoordinate().getColumn();
-            test[4]=eatSoldierMovesStack.peek().getPossibleEatMoves().get(0)[1].getRow();
-            test[5]=eatSoldierMovesStack.peek().getPossibleEatMoves().get(0)[1].getColumn();
+            test[4]=eatSoldierMovesStack.peek().getPossibleEatMoves().get(index)[1].getRow();
+            test[5]=eatSoldierMovesStack.peek().getPossibleEatMoves().get(index)[1].getColumn();
             test[6]=1;
         }
         else{
             System.out.println("move");
-            test[0]=soldierMovesStack.peek().getPossibleMoves().get(0).getRow();
-            test[1]=soldierMovesStack.peek().getPossibleMoves().get(0).getColumn();
+            
+            int size = soldierMovesStack.peek().getPossibleMoves().size();
+            index=(int)(Math.random()*(size-1));
+            //System.out.println("index:"+index+" size-1:"+(size-1));
+
+            test[0]=soldierMovesStack.peek().getPossibleMoves().get(index).getRow();
+            test[1]=soldierMovesStack.peek().getPossibleMoves().get(index).getColumn();
             test[2]=soldierMovesStack.peek().getsoldierCoordinate().getRow();
             test[3]=soldierMovesStack.peek().getsoldierCoordinate().getColumn();
             test[4]=0;
@@ -98,6 +109,12 @@ public class Computer extends Players {
         else test[7]=0;
         
         return test;
+    }
+
+    private void printTest(int[] test){
+        for (int i : test) {
+            System.out.print(i+" ");
+        }
     }
 
     private void copyStack(Stack<SoldierMoves> copySoldierMovesStack,Stack<SoldierMoves> soldierMovesStack){

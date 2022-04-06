@@ -30,4 +30,9 @@ public class Coordinate {
     public int getValue() {
         return value;
     }
+
+    @Override
+    public String toString(){
+        return ("row:"+row+" column:"+column+" value:"+value);
+    }
 }
