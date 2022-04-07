@@ -14,8 +14,10 @@ public class SoldierMoves {
     private Coordinate soldierCoordinate;
 
     private List<Coordinate> possibleMoves;
+    private List<Coordinate> allySoldier;
     private List<Coordinate[]> possibleEatMoves;
     private List<Coordinate> coordinatesOfEnemySoldiercanNotEat;
+    private List<Coordinate> notSafeMove;
     
     //this function is a constructor
     public SoldierMoves(int [][]lBoard,GameButton [][]gBoard,Coordinate soldierCoordinate){
@@ -25,14 +27,18 @@ public class SoldierMoves {
         this.player_color=soldierCoordinate.getValue(); // 0 empty 1 red 2 black
         
 
-        possibleMoves=new ArrayList<Coordinate>();
-        possibleEatMoves=new ArrayList<Coordinate[]>();
-        coordinatesOfEnemySoldiercanNotEat=new ArrayList<Coordinate>();
+        possibleMoves = new ArrayList<Coordinate>();
+        possibleEatMoves = new ArrayList<Coordinate[]>();
+        coordinatesOfEnemySoldiercanNotEat = new ArrayList<Coordinate>();
+        allySoldier = new ArrayList<Coordinate>();
+        notSafeMove = new ArrayList<Coordinate>();
 
         scannMap();
         findPossibleMoves();
         findPossibleEatMoves();
         findCoordinatesOfEnemySoldiercanNotEat();
+        findAllySoldier();
+        findMoveNotSafe();
     }
 
     //this function scann the map and update the directions and the Two_directions
@@ -94,7 +100,7 @@ public class SoldierMoves {
         }
     }
 
-    //returns the list of possible moves
+    //updates the list of possible moves
     public void findPossibleMoves(){
         if(up.getValue()==0){
             possibleMoves.add(up);
@@ -110,7 +116,7 @@ public class SoldierMoves {
         }
     }
 
-    //returns the list of possible eat moves
+    //updates the list of possible eat moves
     public void findPossibleEatMoves(){
         if(twoUp[0].getValue()==0 && twoUp[1].getValue() != player_color && twoUp[1].getValue() != 0){
             possibleEatMoves.add(twoUp);
@@ -127,7 +133,7 @@ public class SoldierMoves {
         
     }
 
-    //returns the list of coordinates of enemy soldier that can not be eaten
+    //updates the list of coordinates of enemy soldier that can not be eaten
     public void findCoordinatesOfEnemySoldiercanNotEat(){
         if(up.getValue()!=0 && up.getValue() !=-1 && up.getValue()!=player_color && twoUp[0].getValue()!=0 && twoUp[0].getValue()!=-1){
             coordinatesOfEnemySoldiercanNotEat.add(up);
@@ -143,12 +149,57 @@ public class SoldierMoves {
         }
     }
 
+    //updates the list of ally soldier
+    public void findAllySoldier(){
+        if(up.getValue()==player_color){
+            allySoldier.add(up);
+        }
+        if(down.getValue()==player_color){
+            allySoldier.add(down);
+        }
+        if(right.getValue()==player_color){
+            allySoldier.add(right);
+        }
+        if(left.getValue()==player_color){
+            allySoldier.add(left);
+        }
+    }
+
+    //updates the list of notSafeMove
+    public void findMoveNotSafe(){
+        if(up.getValue()==0 && (twoUp[0].getValue()!=0 && twoUp[0].getValue()!=-1 && twoUp[0].getValue()!=player_color)){
+            notSafeMove.add(up);
+        }
+        if(down.getValue()==0 && (twoDown[0].getValue()!=0 && twoDown[0].getValue()!=-1 && twoDown[0].getValue()!=player_color)){
+            notSafeMove.add(down);
+        }
+        if(right.getValue()==0 && (twoRight[0].getValue()!=0 && twoRight[0].getValue()!=-1 && twoRight[0].getValue()!=player_color)){
+            notSafeMove.add(right);
+        }
+        if(left.getValue()==0 && (twoLeft[0].getValue()!=0 && twoLeft[0].getValue()!=-1 && twoLeft[0].getValue()!=player_color)){
+            notSafeMove.add(left);
+        }
+    }
+
     //this function is to find if the soldier is stuck
     public boolean isSoldierStuck(){
         if(possibleMoves.isEmpty() && possibleEatMoves.isEmpty()){
             return true;
         }
         return false;
+    }
+
+    //this function calculates the weight of the soldierMoves
+    public int weightSoldierMoves(){
+        int weight=0;
+
+        weight+=possibleMoves.size()*25;
+        weight+=possibleEatMoves.size()*100;
+        weight+=allySoldier.size()*50;
+        weight-=coordinatesOfEnemySoldiercanNotEat.size()*35;
+        weight-=notSafeMove.size()*100;
+ 
+        return weight;
     }
 
     public List<Coordinate> getCoordinatesOfEnemySoldier() {
@@ -167,8 +218,12 @@ public class SoldierMoves {
         return soldierCoordinate;
     }
 
+    public List<Coordinate> getAllySoldier() {
+        return allySoldier;
+    }
+
     @Override
     public String toString(){
-        return("\n"+"up:"+up+" down:"+down+" left:"+left+" right:"+right+"\n"+"twoUp:"+twoUp[0]+" twoDown:"+twoDown[0]+" twoLeft:"+twoLeft[0]+" twoRight"+twoRight[0]+"\n"+"possibleMoves:"+possibleMoves+"\n"+"possibleEatMoves:"+possibleEatMoves+"\n"+"coordinatesOfEnemySoldiercanNotEat:"+coordinatesOfEnemySoldiercanNotEat+"\n"+"soldierCoordinate:"+soldierCoordinate);
+        return("\n"+"up:"+up+" down:"+down+" left:"+left+" right:"+right+"\n"+"twoUp:"+twoUp[0]+" twoDown:"+twoDown[0]+" twoLeft:"+twoLeft[0]+" twoRight"+twoRight[0]+"\n"+"possibleMoves:"+possibleMoves+"\nnotSafeMove:"+notSafeMove+"\n"+"possibleEatMoves:"+possibleEatMoves+"\n"+"coordinatesOfEnemySoldiercanNotEat:"+coordinatesOfEnemySoldiercanNotEat+"\nallySoldier:"+allySoldier+"\n"+"soldierCoordinate:"+soldierCoordinate);
     }
 }
