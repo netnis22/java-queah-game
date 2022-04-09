@@ -210,33 +210,55 @@ public class Computer extends Players {
             else copySoldierMovesStack.pop();
         }
 
-        System.out.println("\nfindBestMove - bestMove:"+bestMove+" Weight:"+bestMove.weightSoldierMoves());
+        System.out.println("\nfindBestMove - bestMove: "+bestMove+"\nWeight: "+bestMove.weightSoldierMoves()+"\n");
 
         return bestMove;
     }
     //this function return the index of the best move in the list
     private int indexOfBestMove(List<Coordinate> possibleMoves){
 
+        boolean isSafe=false;
+
         int index=0;
         int numOfindex=0;
-        int bestWeight=0;
+        int bestWeight = Integer.MIN_VALUE;
+
         SoldierMoves bestMove=null;
+        SoldierMoves Move=null;
+
         for (Coordinate coordinate : possibleMoves){
                 int weight;
 
-                bestMove = new SoldierMoves(lBoard,gBoard,coordinate);
-                weight=bestMove.weightSoldierMoves();
+                Move = new SoldierMoves(lBoard,gBoard,coordinate);
+                weight=Move.weightSoldierMoves();
 
-                if(weight>bestWeight){
+                if(!isSafe && Move.isSoldierNotInDanger()){
+                    System.out.println("indexOfBestMove - 1| "+" weight: "+weight+" isSafe: "+Move.isSoldierNotInDanger()+" CoordinateMove: "+Move.getSoldierCoordinate());
+                    isSafe=true;
                     bestWeight=weight;
+                    bestMove=Move;
                     index=numOfindex;
                 }
-
+                else if(weight>bestWeight && Move.isSoldierNotInDanger()){
+                    System.out.println("indexOfBestMove - 2| "+" weight: "+weight+" isSafe: "+Move.isSoldierNotInDanger()+" CoordinateMove: "+Move.getSoldierCoordinate());
+                    isSafe=Move.isSoldierNotInDanger();
+                    bestWeight=weight;
+                    bestMove=Move;
+                    index=numOfindex;
+                }
+                else if(weight>bestWeight && !isSafe){
+                    System.out.println("indexOfBestMove - 3| "+" weight: "+weight+" isSafe: "+Move.isSoldierNotInDanger()+" CoordinateMove: "+Move.getSoldierCoordinate());
+                    isSafe=Move.isSoldierNotInDanger();
+                    bestWeight=weight;
+                    bestMove=Move;
+                    index=numOfindex;
+                }
+                else System.out.println("indexOfBestMove - 4| "+" weight: "+weight+" isSafe: "+Move.isSoldierNotInDanger()+" CoordinateMove: "+Move.getSoldierCoordinate());
             numOfindex++;
         }
 
-        System.out.println("\nindexOfBestMove - bestMove:"+bestMove+" Weight:"+bestMove.weightSoldierMoves());
-
+        System.out.println("\nindexOfBestMove - bestMove: "+bestMove+"\nWeight: "+bestMove.weightSoldierMoves()+"\nisSafe: "+isSafe+"\nindex: "+index+"\n");
+        System.out.println();
         return index;
     }
 
@@ -254,7 +276,7 @@ public class Computer extends Players {
             else copyEatSoldierMovesStack.pop();
         }
 
-        System.out.println("\nfindBestEat - bestEatMoves:"+bestEatMoves+" Weight:"+bestEatMoves.weightSoldierMoves());
+        System.out.println("\nfindBestEat - bestEatMoves: "+bestEatMoves+"\nWeight: "+bestEatMoves.weightSoldierMoves()+"\n");
 
         return bestEatMoves;
     }
@@ -264,23 +286,27 @@ public class Computer extends Players {
 
         int index=0;
         int numOfindex=0;
-        int bestWeight=0;
+        int bestWeight = Integer.MIN_VALUE;
+
         SoldierMoves bestEatMoves=null;
+        SoldierMoves EatMoves=null;
+
         for (Coordinate[] coordinate : possibleEatMoves){
                 int weight;
 
-                bestEatMoves = new SoldierMoves(lBoard,gBoard,coordinate[0]);
-                weight=bestEatMoves.weightSoldierMoves();
+                EatMoves = new SoldierMoves(lBoard,gBoard,coordinate[0]);
+                weight=EatMoves.weightSoldierMoves();
 
                 if(weight>bestWeight){
                     bestWeight=weight;
                     index=numOfindex;
+                    bestEatMoves=EatMoves;
                 }
 
             numOfindex++;
         }
 
-        System.out.println("\nindexOfBestEat - bestEatMoves:"+bestEatMoves+" Weight:"+bestEatMoves.weightSoldierMoves());
+        System.out.println("\nindexOfBestEat - bestEatMoves: "+bestEatMoves+"\nWeight: "+bestEatMoves.weightSoldierMoves()+"\n");
 
         return index;
     }
@@ -326,7 +352,8 @@ public class Computer extends Players {
         int weight=0;
         for(int i=0;i<lBoard.length;i++){
             for(int j=0;j<lBoard.length;j++){
-                if(gBoard[i][j].getWeight()>weight &&lBoard[i][j]==0){
+                if(gBoard[i][j].getWeight()>weight && lBoard[i][j]==0){
+                    weight = gBoard[i][j].getWeight();
                     data[0]=i;
                     data[1]=j;
                     data[2]=weight;
