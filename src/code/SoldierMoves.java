@@ -4,7 +4,10 @@ import java.util.*;
 
 public class SoldierMoves {
 
+    private boolean isSafe;
+
     private int player_color;
+    private int opponent_color;
 
     private int [][]lBoard;
     private GameButton [][]gBoard;
@@ -25,6 +28,13 @@ public class SoldierMoves {
         this.gBoard=gBoard;
         this.soldierCoordinate=soldierCoordinate;
         this.player_color=soldierCoordinate.getValue(); // 0 empty 1 red 2 black
+
+        if(player_color==1){
+            opponent_color=2;
+        }
+        else{
+            opponent_color=1;
+        }
         
 
         possibleMoves = new ArrayList<Coordinate>();
@@ -34,6 +44,7 @@ public class SoldierMoves {
         notSafeMove = new ArrayList<Coordinate>();
 
         scannMap();
+        isSoldierNotInDanger();
         findPossibleMoves();
         findPossibleEatMoves();
         findCoordinatesOfEnemySoldiercanNotEat();
@@ -189,6 +200,14 @@ public class SoldierMoves {
         return false;
     }
 
+    //this function is to find if the soldier is not in danger
+    public boolean isSoldierNotInDanger(){
+        if((up.getValue()==0 && down.getValue()==opponent_color) || (down.getValue()==0 && up.getValue()==opponent_color) || (right.getValue()==0 && left.getValue()==opponent_color) || (left.getValue()==0 && right.getValue()==opponent_color)){
+            return false;
+        }
+        return true;
+    }
+
     //this function calculates the weight of the soldierMoves
     public int weightSoldierMoves(){
         int weight=0;
@@ -198,6 +217,8 @@ public class SoldierMoves {
         weight+=allySoldier.size()*50;
         weight-=coordinatesOfEnemySoldiercanNotEat.size()*35;
         weight-=notSafeMove.size()*100;
+
+        // if(isSoldierNotInDanger()) weight-=100;
  
         return weight;
     }

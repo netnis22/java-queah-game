@@ -70,6 +70,7 @@ public class Computer extends Players {
         Coordinate soldierCoordinate;
         Stack<SoldierMoves> copySoldierMovesStack=new Stack<SoldierMoves>();
         Stack<SoldierMoves> eatSoldierMovesStack=new Stack<SoldierMoves>();
+        Stack<SoldierMoves> notSafeSoldierMovesStack=new Stack<SoldierMoves>();
 
         findAllPossibleSoldier();
 
@@ -77,6 +78,14 @@ public class Computer extends Players {
 
         while(!copySoldierMovesStack.isEmpty()){
             if(!copySoldierMovesStack.peek().getPossibleEatMoves().isEmpty()) eatSoldierMovesStack.push(copySoldierMovesStack.peek());
+            copySoldierMovesStack.pop();
+        }
+
+        copySoldierMovesStack.clear();
+        copyStack(copySoldierMovesStack,soldierMovesStack);
+
+        while(!copySoldierMovesStack.isEmpty()){
+            if(!copySoldierMovesStack.peek().isSoldierNotInDanger()) notSafeSoldierMovesStack.push(copySoldierMovesStack.peek());
             copySoldierMovesStack.pop();
         }
         
@@ -112,6 +121,42 @@ public class Computer extends Players {
             test[4] = possibleEatMoves.get(index)[1].getRow();
             test[5] = possibleEatMoves.get(index)[1].getColumn();
             test[6] = 1;
+        }
+        else if(!notSafeSoldierMovesStack.isEmpty()){
+            System.out.println("move denger Soldier");
+
+            List<Coordinate> possibleMoves;
+
+            if(difficulty == 0){
+                popRandom(notSafeSoldierMovesStack);
+                possibleMoves=notSafeSoldierMovesStack.peek().getPossibleMoves();
+                soldierCoordinate=notSafeSoldierMovesStack.peek().getSoldierCoordinate();
+            }
+            else{
+                SoldierMoves bestMoves;
+                bestMoves = findBestMove(notSafeSoldierMovesStack);
+                possibleMoves=bestMoves.getPossibleMoves();
+                soldierCoordinate=bestMoves.getSoldierCoordinate();
+            }
+
+            size = notSafeSoldierMovesStack.peek().getPossibleMoves().size();
+
+            if(difficulty == 0) index=(int)(Math.random()*(size-1));
+            else index=indexOfBestMove(possibleMoves);
+            //System.out.println("index:"+index+" size-1:"+(size-1));
+
+            test[0] = possibleMoves.get(index).getRow();
+            test[1] = possibleMoves.get(index).getColumn();
+            test[2] = soldierCoordinate.getRow();
+            test[3] = soldierCoordinate.getColumn();
+            test[4] = 0;
+            test[5] = 0;
+            test[6] = 0;
+
+            if(isSoldierNotLeftFirstTime<=1) test[7]=1;
+            else test[7]=0;
+            
+            return test;
         }
         else{
             System.out.println("move");
@@ -253,6 +298,7 @@ public class Computer extends Players {
     //this function is copy stack from one stack to another
     private void copyStack(Stack<SoldierMoves> copySoldierMovesStack,Stack<SoldierMoves> soldierMovesStack){
         Stack<SoldierMoves> copySoldierMovesStack2=new Stack<SoldierMoves>();
+
         while(!soldierMovesStack.isEmpty()){
             copySoldierMovesStack.push(soldierMovesStack.peek());
             copySoldierMovesStack2.push(soldierMovesStack.pop());
