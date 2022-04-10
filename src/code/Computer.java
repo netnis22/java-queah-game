@@ -6,6 +6,7 @@ import java.util.Stack;
 public class Computer extends Players {
 
     private int difficulty;
+    private int depth=10;
     private int player_color; //1 red 2 black
     private int isSoldierNotLeftFirstTime;
     private int sameMoveCount;
@@ -53,15 +54,19 @@ public class Computer extends Players {
         soldierMovesStack = new Stack<SoldierMoves>();
     }
 
-    public String getMap() {
-        return map;
+    public void copyPlayer(Players player){
+        this.player_color = player.getPlayer_color();
+        this.soldier_left = player.getSoldierLeft();
+        this.soldier_on_board = player.getSoldier_on_board();
     }
 
+
     //this function is to manage the computer,isSoldierLeft-1(yes)/0(no)
-    public int[] play(boolean isEaten,int [][]lBoard,GameButton [][]gBoard) {
+    public int[] play(boolean isEaten,int [][]lBoard,GameButton [][]gBoard,Players enemy) {
         int test[]=new int[8];
         this.lBoard=lBoard;
         this.gBoard=gBoard;
+        this.enemy.copyPlayer(enemy);
 
         if(getSoldierLeft()==0) isSoldierNotLeftFirstTime++;
 
@@ -71,6 +76,10 @@ public class Computer extends Players {
         soldierMovesStack.clear();
 
         return test;
+    }
+
+    public String getMap() {
+        return map;
     }
 
     //NOT FOR QUEAHBOARD ONLY MINMAX CAN USE THIS FUNCTION!!!!!!!!!!
@@ -133,6 +142,7 @@ public class Computer extends Players {
         int size;
         Coordinate soldierCoordinate;
 
+        System.out.println("ENMY SOLDIER LEFT: "+enemy.getSoldierLeft());
         updateStaks();
         
         if(!eatSoldierMovesStack.isEmpty()){
@@ -153,7 +163,7 @@ public class Computer extends Players {
             }
             else{
                 SoldierMoves bestEatMoves;
-                MinMax bestMinMax = new MinMax(lBoard, enemy, Computer.this, 3, player_color);
+                MinMax bestMinMax = new MinMax(lBoard, enemy, Computer.this,depth, player_color);
                 for(int i=0;i<bestMinMax.getBestPop();i++){
                     eatSoldierMovesStack.pop();
                 }
@@ -168,7 +178,7 @@ public class Computer extends Players {
             if(difficulty == 0) index=(int)(Math.random()*(size-1));
             else if(difficulty == 1) index=indexOfBestEat(possibleEatMoves);
             else {
-                MinMax bestMinMax = new MinMax(lBoard, enemy, Computer.this, 3, player_color);
+                MinMax bestMinMax = new MinMax(lBoard, enemy, Computer.this, depth, player_color);
                 index=bestMinMax.getBestIndex();
             }
             //System.out.println("index:"+index+" size-1:"+(size-1));
@@ -199,7 +209,7 @@ public class Computer extends Players {
             }
             else{
                 SoldierMoves bestMoves;
-                MinMax bestMinMax = new MinMax(lBoard, enemy, Computer.this, 3, player_color);
+                MinMax bestMinMax = new MinMax(lBoard, enemy, Computer.this, depth, player_color);
                 for(int i=0;i<bestMinMax.getBestPop();i++){
                     notSafeSoldierMovesStack.pop();
                 }
@@ -213,7 +223,7 @@ public class Computer extends Players {
             if(difficulty == 0) index=(int)(Math.random()*(size-1));
             else if(difficulty == 1) index=indexOfBestMove(possibleMoves);
             else {
-                MinMax bestMinMax = new MinMax(lBoard, enemy, Computer.this, 3, player_color);
+                MinMax bestMinMax = new MinMax(lBoard, enemy, Computer.this, depth, player_color);
                 index=bestMinMax.getBestIndex();
             }
 
@@ -265,7 +275,7 @@ public class Computer extends Players {
             }
             else{
                 SoldierMoves bestMoves;
-                MinMax bestMinMax = new MinMax(lBoard, enemy, Computer.this, 3, player_color);
+                MinMax bestMinMax = new MinMax(lBoard, enemy, Computer.this, depth, player_color);
                 for(int i=0;i<bestMinMax.getBestPop();i++){
                     soldierMovesStack.pop();
                 }
@@ -279,7 +289,7 @@ public class Computer extends Players {
             if(difficulty == 0) index=(int)(Math.random()*(size-1));
             else if(difficulty == 1) index=indexOfBestMove(possibleMoves);
             else {
-                MinMax bestMinMax = new MinMax(lBoard, enemy, Computer.this, 3, player_color);
+                MinMax bestMinMax = new MinMax(lBoard, enemy, Computer.this, depth, player_color);
                 index=bestMinMax.getBestIndex();
             }
 

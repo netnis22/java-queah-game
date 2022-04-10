@@ -251,6 +251,9 @@ public class MinMax {
         if(computer.getSoldierMovesStack()!=null){
             return computer.findBestMove(computer.getSoldierMovesStack()).weightSoldierMoves();
         }
+        if(computer.getNotSafeSoldierMovesStack()!=null){
+            return computer.findBestMove(computer.getNotSafeSoldierMovesStack()).weightSoldierMoves();
+        }
         return weight;
     }
 
