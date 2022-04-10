@@ -17,6 +17,7 @@ public class Computer extends Players {
 
     private Stack<SoldierMoves> soldierMovesStack;
     
+    private Players player;
     
     public Computer(int player_color, String map,int difficulty) {
         super(player_color, map);
@@ -28,12 +29,13 @@ public class Computer extends Players {
     }
 
     //this function is to manage the computer,isSoldierLeft-1(yes)/0(no)
-    public int[] play(boolean isEaten,int [][]lBoard,GameButton [][]gBoard) {
+    public int[] play(boolean isEaten,int [][]lBoard,GameButton [][]gBoard,Players player) {
         int test[]=new int[8];
         this.lBoard=lBoard;
         this.gBoard=gBoard;
+        this.player=player;
 
-        if(getSoldierLeft()==0) isSoldierNotLeftFirstTime++;
+        if(player.getSoldierLeft()==0) isSoldierNotLeftFirstTime++;
 
         if(isEaten && isSoldierNotLeftFirstTime<=1) test=addNewSolid();
         else test=move();
