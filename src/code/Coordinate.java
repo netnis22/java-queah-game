@@ -32,6 +32,15 @@ public class Coordinate {
     }
 
     @Override
+    public boolean equals(Object other){
+        if(this.row == ((Coordinate)other).row && this.column == ((Coordinate)other).column){
+            return true;
+        }
+        return false;
+    }
+
+
+    @Override
     public String toString(){
         return ("row:"+row+" column:"+column+" value:"+value);
     }

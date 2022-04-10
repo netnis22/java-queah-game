@@ -8,6 +8,9 @@ public class Computer extends Players {
     private final int difficulty;
     private int player_color; //1 red 2 black
     private int isSoldierNotLeftFirstTime;
+    private int sameMoveCount;
+
+    private Coordinate lestPos=null;
 
     private int [][]lBoard;
     private GameButton [][]gBoard;
@@ -16,8 +19,6 @@ public class Computer extends Players {
     
     private Players player;
     
-    
-
     public Computer(int player_color, String map,int difficulty) {
         super(player_color, map);
         this.player_color = player_color;
@@ -143,8 +144,24 @@ public class Computer extends Players {
 
             if(difficulty == 0) index=(int)(Math.random()*(size-1));
             else index=indexOfBestMove(possibleMoves);
-            //System.out.println("index:"+index+" size-1:"+(size-1));
 
+            //fixs loop infanetly problem
+            if(lestPos==null)lestPos=possibleMoves.get(index);
+            else if(lestPos.equals(possibleMoves.get(index))){
+                sameMoveCount++;
+                if(sameMoveCount>5){
+                    index = 0;
+                    while(lestPos.equals(possibleMoves.get(index)))
+                    {
+                        index++;
+                        if(index>=size) break;
+                    }
+                }
+            }
+            else if(possibleMoves.size()>1){
+                sameMoveCount=0;
+                lestPos=possibleMoves.get(index);
+            }
             test[0] = possibleMoves.get(index).getRow();
             test[1] = possibleMoves.get(index).getColumn();
             test[2] = soldierCoordinate.getRow();
@@ -179,7 +196,24 @@ public class Computer extends Players {
 
             if(difficulty == 0) index=(int)(Math.random()*(size-1));
             else index=indexOfBestMove(possibleMoves);
-            //System.out.println("index:"+index+" size-1:"+(size-1));
+
+            //fixs loop infanetly problem
+            if(lestPos==null)lestPos=possibleMoves.get(index);
+            else if(lestPos.equals(possibleMoves.get(index))){
+                sameMoveCount++;
+                if(sameMoveCount>5){
+                    index = 0;
+                    while(lestPos.equals(possibleMoves.get(index)))
+                    {
+                        index++;
+                        if(index>=size) break;
+                    }
+                }
+            }
+            else if(possibleMoves.size()>1){
+                sameMoveCount=0;
+                lestPos=possibleMoves.get(index);
+            }
 
             test[0] = possibleMoves.get(index).getRow();
             test[1] = possibleMoves.get(index).getColumn();
