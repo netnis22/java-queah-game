@@ -402,7 +402,6 @@ public class QueahBoard extends JPanel {
                         ComputerMove(false);
                         isFirstCOMvsCOM=false;
                     }
-                    
                     break;
                 default:
                     HumanMove();
@@ -523,8 +522,8 @@ public class QueahBoard extends JPanel {
 
             int data[];
             //check if the player is computer and this is His turn if it is then call the function play
-            if(turn == playerRed.getPlayer_color() && !playerRed.IsHuman()) data = computerRed.play(isEaten,lBoard,gBoard,playerRed);
-            else if(turn == playerBlack.getPlayer_color() && !playerBlack.IsHuman()) data = computerBlack.play(isEaten,lBoard,gBoard,playerBlack);
+            if(turn == playerRed.getPlayer_color() && !playerRed.IsHuman()) data = computerRed.play(isEaten,lBoard,gBoard);
+            else if(turn == playerBlack.getPlayer_color() && !playerBlack.IsHuman()) data = computerBlack.play(isEaten,lBoard,gBoard);
             else{
                 //System.out.println("dont move computer");
                 return;

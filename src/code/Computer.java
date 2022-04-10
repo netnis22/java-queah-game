@@ -5,7 +5,7 @@ import java.util.Stack;
 
 public class Computer extends Players {
 
-    private final int difficulty;
+    private int difficulty;
     private int player_color; //1 red 2 black
     private int isSoldierNotLeftFirstTime;
     private int sameMoveCount;
@@ -16,32 +16,85 @@ public class Computer extends Players {
     private GameButton [][]gBoard;
 
     private Stack<SoldierMoves> soldierMovesStack;
+    private Stack<SoldierMoves> eatSoldierMovesStack;
+    private Stack<SoldierMoves> notSafeSoldierMovesStack;
     
     private Players player;
+    private Players enemy;
+
+    private String map;
     
-    public Computer(int player_color, String map,int difficulty) {
+    public Computer(int player_color,Players enemy, String map,int difficulty) {
         super(player_color, map);
+        this.map = map;
         this.player_color = player_color;
         this.difficulty=difficulty;
+        this.enemy=enemy;
+
+        isSoldierNotLeftFirstTime =0;
+        soldierMovesStack = new Stack<SoldierMoves>();
+    }
+
+    public String getMap() {
+        return map;
+    }
+
+    public Computer(int player_color, String map){
+        super(player_color, map);
+        this.player_color = player_color;
 
         isSoldierNotLeftFirstTime =0;
         soldierMovesStack = new Stack<SoldierMoves>();
     }
 
     //this function is to manage the computer,isSoldierLeft-1(yes)/0(no)
-    public int[] play(boolean isEaten,int [][]lBoard,GameButton [][]gBoard,Players player) {
+    public int[] play(boolean isEaten,int [][]lBoard,GameButton [][]gBoard) {
         int test[]=new int[8];
         this.lBoard=lBoard;
         this.gBoard=gBoard;
-        this.player=player;
 
-        if(player.getSoldierLeft()==0) isSoldierNotLeftFirstTime++;
+        if(getSoldierLeft()==0) isSoldierNotLeftFirstTime++;
 
         if(isEaten && isSoldierNotLeftFirstTime<=1) test=addNewSolid();
         else test=move();
 
         soldierMovesStack.clear();
 
+        return test;
+    }
+
+    //NOT FOR QUEAHBOARD ONLY MINMAX CAN USE THIS FUNCTION!!!!!!!!!!
+    public int[] playMinMax(boolean isEaten,Coordinate moveCoordinate,Coordinate eat,Coordinate soldierCoordinates ,int [][]lBoard,GameButton [][]gBoard){
+        int test[]=new int[8];
+        this.lBoard=lBoard;
+        this.gBoard=gBoard;
+
+        if(player.getSoldierLeft()==0) isSoldierNotLeftFirstTime++;
+
+        if(isEaten && isSoldierNotLeftFirstTime<=1) test=addNewSolid();
+        else{
+            if(isSoldierNotLeftFirstTime<=1) test[7]=1;
+            else test[7]=0;
+
+            if(eat !=null){
+                test[0] = moveCoordinate.getRow();
+                test[1] = moveCoordinate.getColumn();
+                test[2] = soldierCoordinates.getRow();
+                test[3] = soldierCoordinates.getColumn();
+                test[4] = eat.getRow();
+                test[5] = eat.getColumn();
+                test[6] = 1;
+            }
+            else{
+                test[0] = moveCoordinate.getRow();
+                test[1] = moveCoordinate.getColumn();
+                test[2] = soldierCoordinates.getRow();
+                test[3] = soldierCoordinates.getColumn();
+                test[4] = 0;
+                test[5] = 0;
+                test[6] = 0;
+            }
+        }
         return test;
     }
 
@@ -69,27 +122,8 @@ public class Computer extends Players {
         int index;
         int size;
         Coordinate soldierCoordinate;
-        Stack<SoldierMoves> copySoldierMovesStack=new Stack<SoldierMoves>();
-        Stack<SoldierMoves> eatSoldierMovesStack=new Stack<SoldierMoves>();
-        Stack<SoldierMoves> notSafeSoldierMovesStack=new Stack<SoldierMoves>();
 
-        findAllPossibleSoldier();
-
-        copyStack(copySoldierMovesStack,soldierMovesStack);
-
-        while(!copySoldierMovesStack.isEmpty()){
-            if(!copySoldierMovesStack.peek().getPossibleEatMoves().isEmpty()) eatSoldierMovesStack.push(copySoldierMovesStack.peek());
-            copySoldierMovesStack.pop();
-        }
-
-        copySoldierMovesStack.clear();
-        copyStack(copySoldierMovesStack,soldierMovesStack);
-
-        while(!copySoldierMovesStack.isEmpty()){
-            if(!copySoldierMovesStack.peek().isSoldierNotInDanger()) notSafeSoldierMovesStack.push(copySoldierMovesStack.peek());
-            copySoldierMovesStack.pop();
-        }
-        
+        updateStaks();
         
         if(!eatSoldierMovesStack.isEmpty()){
             System.out.println("eat");
@@ -231,7 +265,7 @@ public class Computer extends Players {
     }
 
     //this function pop the best move from the stack
-    private SoldierMoves findBestMove(Stack<SoldierMoves> soldierMovesStack){
+    SoldierMoves findBestMove(Stack<SoldierMoves> soldierMovesStack){
 
         Stack<SoldierMoves> copySoldierMovesStack=new Stack<SoldierMoves>();
         SoldierMoves bestMove=null;
@@ -297,7 +331,7 @@ public class Computer extends Players {
     }
 
     //this function pop the best eat move from the stack
-    private SoldierMoves findBestEat(Stack<SoldierMoves> eatSoldierMovesStack){
+    public SoldierMoves findBestEat(Stack<SoldierMoves> eatSoldierMovesStack){
         
         Stack<SoldierMoves> copyEatSoldierMovesStack=new Stack<SoldierMoves>();
         SoldierMoves bestEatMoves=null;
@@ -368,6 +402,29 @@ public class Computer extends Players {
 
     }
 
+    public void updateStaks(){
+        Stack<SoldierMoves> copySoldierMovesStack=new Stack<SoldierMoves>();
+        eatSoldierMovesStack=new Stack<SoldierMoves>();
+        notSafeSoldierMovesStack=new Stack<SoldierMoves>();
+
+        findAllPossibleSoldier();
+
+        copyStack(copySoldierMovesStack,soldierMovesStack);
+
+        while(!copySoldierMovesStack.isEmpty()){
+            if(!copySoldierMovesStack.peek().getPossibleEatMoves().isEmpty()) eatSoldierMovesStack.push(copySoldierMovesStack.peek());
+            copySoldierMovesStack.pop();
+        }
+
+        copySoldierMovesStack.clear();
+        copyStack(copySoldierMovesStack,soldierMovesStack);
+
+        while(!copySoldierMovesStack.isEmpty()){
+            if(!copySoldierMovesStack.peek().isSoldierNotInDanger()) notSafeSoldierMovesStack.push(copySoldierMovesStack.peek());
+            copySoldierMovesStack.pop();
+        }
+    }
+
     //find all the soldier of the computer that is not stuck
     private void findAllPossibleSoldier(){
         for(int i=0;i<lBoard.length;i++){
@@ -394,15 +451,62 @@ public class Computer extends Players {
                 }
             }
         }
-
         return data;
     }
 
+    // private int minmax(SoldierMoves position,int depth,boolean maximzingPlayert){
+    //     if (depth == 0 || position.isSoldierStuck()){
+    //         return position.weightSoldierMoves();
+    //     }
+    //     else if(maximzingPlayert){
+    //         int bestWeight = Integer.MIN_VALUE;
+    //         for (Coordinate coordinate : position.getPossibleMoves()){
+    //             SoldierMoves soldierMoves = new SoldierMoves(lBoard,gBoard,coordinate);
+    //             bestWeight = Math.max(bestWeight,minmax(soldierMoves,depth-1,false));
+    //         }
+    //         return bestWeight;
+    //     }
+    //     else{
+    //         int bestWeight = Integer.MAX_VALUE;
+    //         for (Coordinate coordinate : position.getPossibleMoves()){
+    //             SoldierMoves soldierMoves = new SoldierMoves(lBoard,gBoard,coordinate);
+    //             bestWeight = Math.min(bestWeight,minmax(soldierMoves,depth-1,true));
+    //         }
+    //         return bestWeight;
+    //     }
+    // }
+
+    
     //this function is printing test
     private void printTest(int[] test){
         for (int i : test) {
             System.out.print(i+" ");
         }
+    }
+
+
+    public Stack<SoldierMoves> getSoldierMovesStack() {
+        return soldierMovesStack;
+    }
+
+    public Stack<SoldierMoves> getEatSoldierMovesStack() {
+        return eatSoldierMovesStack;
+    }
+
+    public Stack<SoldierMoves> getNotSafeSoldierMovesStack() {
+        return notSafeSoldierMovesStack;
+    }
+
+    public void setSoldierMovesStack() {
+        this.soldierMovesStack = new Stack<SoldierMoves>();
+    }
+
+    public void setEatSoldierMovesStack() {
+        this.eatSoldierMovesStack = new Stack<SoldierMoves>();
+    }
+
+    public void setNotSafeSoldierMovesStack() {
+        this.notSafeSoldierMovesStack = new Stack<SoldierMoves>();
     }
 
     @Override
