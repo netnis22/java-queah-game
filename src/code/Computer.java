@@ -19,12 +19,11 @@ public class Computer extends Players {
     private Stack<SoldierMoves> eatSoldierMovesStack;
     private Stack<SoldierMoves> notSafeSoldierMovesStack;
     
-    private Players player;
-    private Players enemy;
+    private Computer enemy;
 
     private String map;
     
-    public Computer(int player_color,Players enemy, String map,int difficulty) {
+    public Computer(int player_color,Computer enemy, String map,int difficulty) {
         super(player_color, map);
         this.map = map;
         this.player_color = player_color;
@@ -34,10 +33,17 @@ public class Computer extends Players {
         isSoldierNotLeftFirstTime =0;
         soldierMovesStack = new Stack<SoldierMoves>();
     }
+    public Computer(int player_color, String map,int difficulty) {
+        super(player_color, map);
+        this.map = map;
+        this.player_color = player_color;
+        this.difficulty=difficulty;
+        this.enemy=null;
 
-    public String getMap() {
-        return map;
+        isSoldierNotLeftFirstTime =0;
+        soldierMovesStack = new Stack<SoldierMoves>();
     }
+
 
     public Computer(int player_color, String map){
         super(player_color, map);
@@ -45,6 +51,10 @@ public class Computer extends Players {
 
         isSoldierNotLeftFirstTime =0;
         soldierMovesStack = new Stack<SoldierMoves>();
+    }
+
+    public String getMap() {
+        return map;
     }
 
     //this function is to manage the computer,isSoldierLeft-1(yes)/0(no)
@@ -69,7 +79,7 @@ public class Computer extends Players {
         this.lBoard=lBoard;
         this.gBoard=gBoard;
 
-        if(player.getSoldierLeft()==0) isSoldierNotLeftFirstTime++;
+        if(getSoldierLeft()==0) isSoldierNotLeftFirstTime++;
 
         if(isEaten && isSoldierNotLeftFirstTime<=1) test=addNewSolid();
         else{
@@ -135,18 +145,32 @@ public class Computer extends Players {
                 possibleEatMoves=eatSoldierMovesStack.peek().getPossibleEatMoves();
                 soldierCoordinate=eatSoldierMovesStack.peek().getSoldierCoordinate();
             }
-            else{
+            else if(difficulty == 1){
                 SoldierMoves bestEatMoves;
                 bestEatMoves = findBestEat(eatSoldierMovesStack);
                 possibleEatMoves=bestEatMoves.getPossibleEatMoves();
                 soldierCoordinate=bestEatMoves.getSoldierCoordinate();
+            }
+            else{
+                SoldierMoves bestEatMoves;
+                MinMax bestMinMax = new MinMax(lBoard, enemy, Computer.this, 3, player_color);
+                for(int i=0;i<bestMinMax.getBestPop();i++){
+                    eatSoldierMovesStack.pop();
+                }
+                bestEatMoves = eatSoldierMovesStack.peek();
+                possibleEatMoves=bestEatMoves.getPossibleEatMoves();
+                soldierCoordinate=bestEatMoves.getSoldierCoordinate(); 
             }
 
 
             size = possibleEatMoves.size();
 
             if(difficulty == 0) index=(int)(Math.random()*(size-1));
-            else index=indexOfBestEat(possibleEatMoves);
+            else if(difficulty == 1) index=indexOfBestEat(possibleEatMoves);
+            else {
+                MinMax bestMinMax = new MinMax(lBoard, enemy, Computer.this, 3, player_color);
+                index=bestMinMax.getBestIndex();
+            }
             //System.out.println("index:"+index+" size-1:"+(size-1));
 
             test[0] = possibleEatMoves.get(index)[0].getRow();
@@ -167,23 +191,37 @@ public class Computer extends Players {
                 possibleMoves=notSafeSoldierMovesStack.peek().getPossibleMoves();
                 soldierCoordinate=notSafeSoldierMovesStack.peek().getSoldierCoordinate();
             }
-            else{
+            else if(difficulty == 1){
                 SoldierMoves bestMoves;
                 bestMoves = findBestMove(notSafeSoldierMovesStack);
                 possibleMoves=bestMoves.getPossibleMoves();
                 soldierCoordinate=bestMoves.getSoldierCoordinate();
             }
+            else{
+                SoldierMoves bestMoves;
+                MinMax bestMinMax = new MinMax(lBoard, enemy, Computer.this, 3, player_color);
+                for(int i=0;i<bestMinMax.getBestPop();i++){
+                    notSafeSoldierMovesStack.pop();
+                }
+                bestMoves = notSafeSoldierMovesStack.peek();
+                possibleMoves=bestMoves.getPossibleMoves();
+                soldierCoordinate=bestMoves.getSoldierCoordinate(); 
+            }
 
             size = notSafeSoldierMovesStack.peek().getPossibleMoves().size();
 
             if(difficulty == 0) index=(int)(Math.random()*(size-1));
-            else index=indexOfBestMove(possibleMoves);
+            else if(difficulty == 1) index=indexOfBestMove(possibleMoves);
+            else {
+                MinMax bestMinMax = new MinMax(lBoard, enemy, Computer.this, 3, player_color);
+                index=bestMinMax.getBestIndex();
+            }
 
             //fixs loop infanetly problem
             if(lestPos==null)lestPos=possibleMoves.get(index);
             else if(lestPos.equals(possibleMoves.get(index))){
                 sameMoveCount++;
-                if(sameMoveCount>5){
+                if(sameMoveCount>3){
                     index = 0;
                     while(lestPos.equals(possibleMoves.get(index)))
                     {
@@ -219,23 +257,37 @@ public class Computer extends Players {
                 possibleMoves=soldierMovesStack.peek().getPossibleMoves();
                 soldierCoordinate=soldierMovesStack.peek().getSoldierCoordinate();
             }
-            else{
+            else if(difficulty == 1){
                 SoldierMoves bestMoves;
                 bestMoves = findBestMove(soldierMovesStack);
                 possibleMoves=bestMoves.getPossibleMoves();
                 soldierCoordinate=bestMoves.getSoldierCoordinate();
             }
+            else{
+                SoldierMoves bestMoves;
+                MinMax bestMinMax = new MinMax(lBoard, enemy, Computer.this, 3, player_color);
+                for(int i=0;i<bestMinMax.getBestPop();i++){
+                    soldierMovesStack.pop();
+                }
+                bestMoves = soldierMovesStack.peek();
+                possibleMoves=bestMoves.getPossibleMoves();
+                soldierCoordinate=bestMoves.getSoldierCoordinate(); 
+            }
 
             size = soldierMovesStack.peek().getPossibleMoves().size();
 
             if(difficulty == 0) index=(int)(Math.random()*(size-1));
-            else index=indexOfBestMove(possibleMoves);
+            else if(difficulty == 1) index=indexOfBestMove(possibleMoves);
+            else {
+                MinMax bestMinMax = new MinMax(lBoard, enemy, Computer.this, 3, player_color);
+                index=bestMinMax.getBestIndex();
+            }
 
             //fixs loop infanetly problem
             if(lestPos==null)lestPos=possibleMoves.get(index);
             else if(lestPos.equals(possibleMoves.get(index))){
                 sameMoveCount++;
-                if(sameMoveCount>5){
+                if(sameMoveCount>3){
                     index = 0;
                     while(lestPos.equals(possibleMoves.get(index)))
                     {

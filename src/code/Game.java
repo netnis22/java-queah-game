@@ -147,8 +147,10 @@ public class Game extends JFrame {
 			case 1:
 				gameMode = 1;
 				difficultyComputer2();
-				playerRed =  new Players(1,map);
-				computerBlack =new Computer(2,playerRed,map,difficultyComputer2);
+				computerRed = new Computer(1,map,difficultyComputer1);
+				playerRed =  computerRed;
+				computerBlack =new Computer(2,computerRed,map,difficultyComputer2);
+				playerRed = new Players(1,map);
 				board = new QueahBoard(Game.this);
 				add(playerRed,BorderLayout.NORTH);
 				add(computerBlack,BorderLayout.SOUTH);
@@ -156,8 +158,12 @@ public class Game extends JFrame {
 			case  2:
 				gameMode = 2;
 				difficultyComputer1();
+				computerRed = new Computer(1,map,difficultyComputer1);
+				computerBlack =new Computer(2,computerRed,map,difficultyComputer2);
+
 				computerRed = new Computer(1,computerBlack,map,difficultyComputer1);
 				computerBlack = new Computer(2,computerRed,map,difficultyComputer2);
+
 				board = new QueahBoard(Game.this);
 				add(computerRed,BorderLayout.NORTH);
 				add(computerBlack,BorderLayout.SOUTH);
