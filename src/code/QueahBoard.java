@@ -17,6 +17,7 @@ public class QueahBoard extends JPanel {
 	Image img = icon.getImage();
 
     private static int startPlayer=1;
+    private boolean isFirstCOMvsCOM=true;
 
     private static int sizeOfboard=5;
     private static int heightOfboard=2;
@@ -369,7 +370,6 @@ public class QueahBoard extends JPanel {
                     gBoard[row][column].setSoldier(redSoldier);
                     isSoldiersEaten=false;
                     turn=2;
-                    if(playerRed.IsHuman() && game.gameMode==1) ComputerMove(false);
                 }
             }
             else
@@ -380,7 +380,7 @@ public class QueahBoard extends JPanel {
                     gBoard[row][column].setSoldier(blackSoldier);
                     isSoldiersEaten=false;
                     turn=1;
-                    if(!playerBlack.IsHuman() && game.gameMode==1) ComputerMove(false);
+
                 }
             }
         }
@@ -398,7 +398,11 @@ public class QueahBoard extends JPanel {
                     HumanMove();
                     break;
                 case 2:
-                    ComputerMove(false);
+                    if(isFirstCOMvsCOM){
+                        ComputerMove(false);
+                        isFirstCOMvsCOM=false;
+                    }
+                    
                     break;
                 default:
                     HumanMove();
@@ -422,14 +426,35 @@ public class QueahBoard extends JPanel {
             the move is valid and if the move was to eat the other player soldier and set the previsButtonPressed to false.
             if  The button was not pressed once the previous time then check if the button is populated by soldier if it populated then
             set previsButtonPressed to true and  previsRow=row and previsColumn=column  if it not populated set previsButtonPressed to false*/
-            if(isSoldiersEaten) addSoldierToBoard();
+            if(isSoldiersEaten){ 
+                addSoldierToBoard();
+                new Thread(new Runnable(){
+                    public void run(){
+                        try{
+                            Thread.sleep(1500);
+                            ComputerMove(false);  
+                        }
+                      catch(InterruptedException ex) {}
+                    }
+                }).start();
+            }
             else if(previsButtonPressed){
                 if(((previsRow == row+1 || previsRow == row-1) && previsColumn == column) || ((previsColumn == column+1 || previsColumn == column-1) && previsRow == row )){
                     if(lBoard[row][column] == 0 && lBoard[previsRow][previsColumn] == turn){
                         if(!(previsRow == row && previsColumn == column)){
                             System.out.println("1");
                             moveSoldier();
-                            if(game.gameMode==1) ComputerMove(false); 
+                            if(game.gameMode==1){
+                                new Thread(new Runnable(){
+                                    public void run(){
+                                        try{
+                                            Thread.sleep(1500);
+                                            ComputerMove(false);  
+                                        }
+                                      catch(InterruptedException ex) {}
+                                    }
+                                }).start();
+                            } 
                         }
                     }
                 }
@@ -519,16 +544,41 @@ public class QueahBoard extends JPanel {
             if(data[6]==0 && (!isEaten||data[7]==0)){
                 System.out.println("move soldier");
                 moveSoldier();
+                if(game.gameMode==2){
+                    new Thread(new Runnable(){
+                        public void run(){
+                            try{
+                                Thread.sleep(1500);
+                                ComputerMove(false);  
+                            }
+                          catch(InterruptedException ex) {}
+                        }
+                    }).start();
+                }
             }
             else if(isEaten && data[7]==1){
                 System.out.println("addSoldierToBoard");
                 addSoldierToBoard();
+                if(game.gameMode==2){
+                    new Thread(new Runnable(){
+                        public void run(){
+                            try{
+                                Thread.sleep(1500);
+                                ComputerMove(false);  
+                            }
+                          catch(InterruptedException ex) {}
+                        }
+                    }).start();
+                }
             }
             else
             {
                 System.out.println("eat soldier");
                 removeSoldier(data[4], data[5]);
                 moveSoldier();
+                if(game.gameMode==2){
+                    ComputerMove(true);
+                }
             }
 
             row=tempRow;
