@@ -232,11 +232,18 @@ public class Computer extends Players {
             else if(lestPos.equals(possibleMoves.get(index))){
                 sameMoveCount++;
                 if(sameMoveCount>3){
-                    index = 0;
-                    while(lestPos.equals(possibleMoves.get(index)))
-                    {
-                        index++;
-                        if(index>=size) break;
+                    while(!notSafeSoldierMovesStack.isEmpty()){
+                        popRandom(notSafeSoldierMovesStack);
+                        possibleMoves=notSafeSoldierMovesStack.peek().getPossibleMoves();
+                        soldierCoordinate=notSafeSoldierMovesStack.peek().getSoldierCoordinate();
+                        size = notSafeSoldierMovesStack.peek().getPossibleMoves().size();
+                        index = 0;
+                        while(lestPos.equals(possibleMoves.get(index)))
+                        {
+                            index=(int)(Math.random()*(size-1));
+                            if(index>=size) break;
+                        }
+                        if(!lestPos.equals(possibleMoves.get(index))) break;
                     }
                 }
             }
@@ -298,11 +305,18 @@ public class Computer extends Players {
             else if(lestPos.equals(possibleMoves.get(index))){
                 sameMoveCount++;
                 if(sameMoveCount>3){
-                    index = 0;
-                    while(lestPos.equals(possibleMoves.get(index)))
-                    {
-                        index++;
-                        if(index>=size) break;
+                    while(!soldierMovesStack.isEmpty()){
+                        popRandom(soldierMovesStack);
+                        possibleMoves=soldierMovesStack.peek().getPossibleMoves();
+                        soldierCoordinate=soldierMovesStack.peek().getSoldierCoordinate();
+                        size = soldierMovesStack.peek().getPossibleMoves().size();
+                        index = 0;
+                        while(lestPos.equals(possibleMoves.get(index)))
+                        {
+                            index=(int)(Math.random()*(size-1));
+                            if(index>=size) break;
+                        }
+                        if(!lestPos.equals(possibleMoves.get(index))) break;
                     }
                 }
             }

@@ -16,9 +16,9 @@ public class QueahBoard extends JPanel {
     ImageIcon icon = new ImageIcon(IMG_BOARD);
 	Image img = icon.getImage();
 
-    private static int startPlayer=1;
     private boolean isFirstCOMvsCOM=true;
-
+    private static int startPlayer=1;
+    private static int thinkTime=500;
     private static int sizeOfboard=5;
     private static int heightOfboard=2;
     private static int max_Player_soldiers_on_board=4;
@@ -430,7 +430,7 @@ public class QueahBoard extends JPanel {
                 new Thread(new Runnable(){
                     public void run(){
                         try{
-                            Thread.sleep(1500);
+                            Thread.sleep(thinkTime);
                             ComputerMove(false);  
                         }
                       catch(InterruptedException ex) {}
@@ -447,7 +447,7 @@ public class QueahBoard extends JPanel {
                                 new Thread(new Runnable(){
                                     public void run(){
                                         try{
-                                            Thread.sleep(1500);
+                                            Thread.sleep(thinkTime);
                                             ComputerMove(false);  
                                         }
                                       catch(InterruptedException ex) {}
@@ -547,7 +547,7 @@ public class QueahBoard extends JPanel {
                     new Thread(new Runnable(){
                         public void run(){
                             try{
-                                Thread.sleep(1500);
+                                Thread.sleep(thinkTime);
                                 ComputerMove(false);  
                             }
                           catch(InterruptedException ex) {}
@@ -562,7 +562,7 @@ public class QueahBoard extends JPanel {
                     new Thread(new Runnable(){
                         public void run(){
                             try{
-                                Thread.sleep(1500);
+                                Thread.sleep(thinkTime);
                                 ComputerMove(false);  
                             }
                           catch(InterruptedException ex) {}
