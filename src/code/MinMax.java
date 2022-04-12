@@ -245,16 +245,24 @@ public class MinMax {
 
     private int maxWeight(){
         int weight = Integer.MIN_VALUE;
+        int weightGame; //num of ally solder - num of enemy soldier 
         if(computer.getEatSoldierMovesStack()!=null){
-            return computer.findBestEat(computer.getEatSoldierMovesStack()).weightSoldierMoves();
+            weight = computer.findBestEat(computer.getEatSoldierMovesStack()).weightSoldierMoves();
         }
-        if(computer.getSoldierMovesStack()!=null){
-            return computer.findBestMove(computer.getSoldierMovesStack()).weightSoldierMoves();
+        else if(computer.getSoldierMovesStack()!=null){
+            weight = computer.findBestMove(computer.getSoldierMovesStack()).weightSoldierMoves();
         }
-        if(computer.getNotSafeSoldierMovesStack()!=null){
-            return computer.findBestMove(computer.getNotSafeSoldierMovesStack()).weightSoldierMoves();
+        else if(computer.getNotSafeSoldierMovesStack()!=null){
+            weight = computer.findBestMove(computer.getNotSafeSoldierMovesStack()).weightSoldierMoves();
         }
-        return weight;
+        weightGame = computer.getSoldierLeft()*1000 - enemy.getSoldierLeft()*1000;
+        return weight + weightGame;
+    }
+
+    private int maxWeight2(){
+        int weightGame; //num of ally solder - num of enemy soldier 
+        weightGame = computer.getSoldierLeft()*1000 - enemy.getSoldierLeft()*1000;
+        return weightGame;
     }
 
 }

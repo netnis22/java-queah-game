@@ -31,6 +31,8 @@ public class Computer extends Players {
         this.difficulty=difficulty;
         this.enemy=enemy;
 
+       // System.out.println("\nplayer_color; "+player_color+" difficulty: "+difficulty+"------------------------------------------");
+
         isSoldierNotLeftFirstTime =0;
         soldierMovesStack = new Stack<SoldierMoves>();
     }
@@ -40,6 +42,8 @@ public class Computer extends Players {
         this.player_color = player_color;
         this.difficulty=difficulty;
         this.enemy=null;
+
+        //System.out.println("\nplayer_color; "+player_color+" difficulty: "+difficulty+"------------------------------------------");
 
         isSoldierNotLeftFirstTime =0;
         soldierMovesStack = new Stack<SoldierMoves>();
