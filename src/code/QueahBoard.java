@@ -16,9 +16,9 @@ public class QueahBoard extends JPanel {
     ImageIcon icon = new ImageIcon(IMG_BOARD);
 	Image img = icon.getImage();
 
-    private static int startPlayer=1;
     private boolean isFirstCOMvsCOM=true;
-
+    private static int startPlayer=1;
+    private static int thinkTime=500;
     private static int sizeOfboard=5;
     private static int heightOfboard=2;
     private static int max_Player_soldiers_on_board=4;
@@ -402,7 +402,6 @@ public class QueahBoard extends JPanel {
                         ComputerMove(false);
                         isFirstCOMvsCOM=false;
                     }
-                    
                     break;
                 default:
                     HumanMove();
@@ -431,7 +430,7 @@ public class QueahBoard extends JPanel {
                 new Thread(new Runnable(){
                     public void run(){
                         try{
-                            Thread.sleep(1500);
+                            Thread.sleep(thinkTime);
                             ComputerMove(false);  
                         }
                       catch(InterruptedException ex) {}
@@ -448,7 +447,7 @@ public class QueahBoard extends JPanel {
                                 new Thread(new Runnable(){
                                     public void run(){
                                         try{
-                                            Thread.sleep(1500);
+                                            Thread.sleep(thinkTime);
                                             ComputerMove(false);  
                                         }
                                       catch(InterruptedException ex) {}
@@ -523,8 +522,8 @@ public class QueahBoard extends JPanel {
 
             int data[];
             //check if the player is computer and this is His turn if it is then call the function play
-            if(turn == playerRed.getPlayer_color() && !playerRed.IsHuman()) data = computerRed.play(isEaten,lBoard,gBoard,playerRed);
-            else if(turn == playerBlack.getPlayer_color() && !playerBlack.IsHuman()) data = computerBlack.play(isEaten,lBoard,gBoard,playerBlack);
+            if(turn == playerRed.getPlayer_color() && !playerRed.IsHuman()) data = computerRed.play(isEaten,lBoard,gBoard,playerBlack);
+            else if(turn == playerBlack.getPlayer_color() && !playerBlack.IsHuman()) data = computerBlack.play(isEaten,lBoard,gBoard,playerRed);
             else{
                 //System.out.println("dont move computer");
                 return;
@@ -548,7 +547,7 @@ public class QueahBoard extends JPanel {
                     new Thread(new Runnable(){
                         public void run(){
                             try{
-                                Thread.sleep(1500);
+                                Thread.sleep(thinkTime);
                                 ComputerMove(false);  
                             }
                           catch(InterruptedException ex) {}
@@ -563,7 +562,7 @@ public class QueahBoard extends JPanel {
                     new Thread(new Runnable(){
                         public void run(){
                             try{
-                                Thread.sleep(1500);
+                                Thread.sleep(thinkTime);
                                 ComputerMove(false);  
                             }
                           catch(InterruptedException ex) {}
