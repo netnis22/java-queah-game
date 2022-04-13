@@ -219,6 +219,95 @@ public class MinMax {
         }
     }
 
+    public int negaMax(){
+        if(depth == 0 || isEndGame()){
+            return maxWeight();
+        }
+        int maxWeight = Integer.MIN_VALUE;
+        int weight;
+        int[] data;
+        if(isEaten){
+            data = computer.playMinMax(isEaten,null, null, null, board, gBoard);
+            weight = - new MinMax(updateBord(board, data, computer.getPlayer_color()), computer, enemy, false,depth-1, maximzingPlayert).negaMax();
+            maxWeight=Math.max(maxWeight,weight);
+            return maxWeight;
+        }
+        else if(computer.getEatSoldierMovesStack()!=null){
+            int popnum = 0;
+            int bestSoldierWeight = Integer.MIN_VALUE;
+            int soldierWeight;
+            for (SoldierMoves soldierMoves : computer.getEatSoldierMovesStack()){
+                int index=0;
+                for (Coordinate[] coordinate : soldierMoves.getPossibleEatMoves()) {
+                    data = computer.playMinMax(isEaten,coordinate[0] , coordinate[1], soldierMoves.getSoldierCoordinate(), board, gBoard);
+                    weight = - new MinMax(updateBord(board, data, computer.getPlayer_color()),computer,enemy,true,depth-1,maximzingPlayert).negaMax();
+                    if(maxWeight<weight){
+                        maxWeight=weight;
+                        bestIndex=index;
+                    }
+                    index++;
+                }
+                soldierWeight=maxWeight;
+                if(bestSoldierWeight<soldierWeight){
+                    bestSoldierWeight=soldierWeight;
+                    bestPop=popnum;
+                }
+                popnum++;
+            }
+            return maxWeight;
+        }
+        else if(computer.getNotSafeSoldierMovesStack() != null)
+        {
+            int popnum = 0;
+            int bestSoldierWeight = Integer.MIN_VALUE;
+            int soldierWeight;
+            for (SoldierMoves soldierMoves : computer.getNotSafeSoldierMovesStack()) {
+                int index=0;
+                for (Coordinate coordinate : soldierMoves.getPossibleMoves()) {
+                    data = computer.playMinMax(isEaten,coordinate, null, soldierMoves.getSoldierCoordinate(), board, gBoard);
+                    weight = - new MinMax(updateBord(board, data, computer.getPlayer_color()),computer,enemy,false,depth-1,maximzingPlayert).negaMax();
+                    if(maxWeight<weight){
+                        maxWeight=weight;
+                        bestIndex=index;
+                    }
+                    index++;
+                }
+                soldierWeight=maxWeight;
+                if(bestSoldierWeight<soldierWeight){
+                    bestSoldierWeight=soldierWeight;
+                    bestPop=popnum;
+                }
+                popnum++;
+            }
+            return maxWeight;
+        }
+        else if(computer.getEatSoldierMovesStack()==null && computer.getNotSafeSoldierMovesStack()==null){
+            int popnum = 0;
+            int bestSoldierWeight = Integer.MIN_VALUE;
+            int soldierWeight;
+            for (SoldierMoves soldierMoves : computer.getSoldierMovesStack()) {
+                int index=0;
+                for (Coordinate coordinate : soldierMoves.getPossibleMoves()) {
+                    data = computer.playMinMax(isEaten,coordinate, null, soldierMoves.getSoldierCoordinate(), board, gBoard);
+                    weight = - new MinMax(updateBord(board, data, computer.getPlayer_color()),computer,enemy,false,depth-1,maximzingPlayert).negaMax();
+                    if(maxWeight<weight){
+                        maxWeight=weight;
+                        bestIndex=index;
+                    }
+                    index++;
+                }
+                soldierWeight=maxWeight;
+                if(bestSoldierWeight<soldierWeight){
+                    bestSoldierWeight=soldierWeight;
+                    bestPop=popnum;
+                }
+                popnum++;
+            }
+            return maxWeight;
+        }
+        else return maxWeight;
+    }
+
     private int[][] updateBord(int[][] board, int[] data, int player_color) {
         int[][] board_copy = board;
         if(data[6]==0 && data[2]!=0){
@@ -245,17 +334,17 @@ public class MinMax {
 
     private int maxWeight(){
         int weight = Integer.MIN_VALUE;
-        int weightGame; //num of ally solder - num of enemy soldier 
-        if(computer.getEatSoldierMovesStack()!=null){
+        int weightGame=0; //num of ally solder - num of enemy soldier 
+        if(!computer.getEatSoldierMovesStack().isEmpty()){
             weight = computer.findBestEat(computer.getEatSoldierMovesStack()).weightSoldierMoves();
         }
-        else if(computer.getSoldierMovesStack()!=null){
+        else if(!computer.getSoldierMovesStack().isEmpty()){
             weight = computer.findBestMove(computer.getSoldierMovesStack()).weightSoldierMoves();
         }
-        else if(computer.getNotSafeSoldierMovesStack()!=null){
+        else if(!computer.getNotSafeSoldierMovesStack().isEmpty()){
             weight = computer.findBestMove(computer.getNotSafeSoldierMovesStack()).weightSoldierMoves();
         }
-        weightGame = computer.getSoldierLeft()*1000 - enemy.getSoldierLeft()*1000;
+        weightGame = computer.getSoldierLeft()*100 - enemy.getSoldierLeft()*100;
         return weight + weightGame;
     }
 
