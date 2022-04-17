@@ -146,11 +146,15 @@ public class Game extends JFrame {
 				break;
 			case 1:
 				gameMode = 1;
+				
 				difficultyComputer2();
-				computerRed = new Computer(1,map,difficultyComputer1);
-				playerRed =  computerRed;
-				computerBlack =new Computer(2,computerRed,map,difficultyComputer2);
 				playerRed = new Players(1,map);
+				playerBlack = new Players(2,map);
+
+				computerRed = new Computer(1,playerBlack,map,difficultyComputer1);
+				
+				computerBlack =new Computer(2,computerRed,map,difficultyComputer2);
+
 				board = new QueahBoard(Game.this);
 				add(playerRed,BorderLayout.NORTH);
 				add(computerBlack,BorderLayout.SOUTH);

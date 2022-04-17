@@ -6,7 +6,7 @@ import java.util.Stack;
 public class Computer extends Players {
 
     private int difficulty;
-    private int depth=3;
+    private int depth=2;
     private int player_color; //1 red 2 black
     private int isSoldierNotLeftFirstTime;
     private int sameMoveCount;
@@ -36,6 +36,22 @@ public class Computer extends Players {
         isSoldierNotLeftFirstTime =0;
         soldierMovesStack = new Stack<SoldierMoves>();
     }
+
+    public Computer(int player_color,Players enemy, String map,int difficulty) {
+        super(player_color, map);
+        this.map = map;
+        this.player_color = player_color;
+        this.difficulty=difficulty;
+
+        this.enemy=new Computer(enemy.getPlayer_color(),Computer.this,this.map,difficulty);
+        this.enemy.copyPlayer(enemy);
+
+       // System.out.println("\nplayer_color; "+player_color+" difficulty: "+difficulty+"------------------------------------------");
+
+        isSoldierNotLeftFirstTime =0;
+        soldierMovesStack = new Stack<SoldierMoves>();
+    }
+
     public Computer(int player_color, String map,int difficulty) {
         super(player_color, map);
         this.map = map;
@@ -58,7 +74,27 @@ public class Computer extends Players {
         soldierMovesStack = new Stack<SoldierMoves>();
     }
 
+    public void copyComputer(Computer computerCopy){
+        if(computerCopy == null)
+            return;
+        this.depth=computerCopy.depth;
+        this.difficulty=computerCopy.difficulty;
+        this.player_color=computerCopy.player_color;
+        this.isSoldierNotLeftFirstTime=computerCopy.isSoldierNotLeftFirstTime;
+        this.sameMoveCount=computerCopy.sameMoveCount;
+        this.lestPos=computerCopy.lestPos;
+        this.lBoard=computerCopy.lBoard;
+        this.gBoard=computerCopy.gBoard;
+        this.soldierMovesStack=computerCopy.soldierMovesStack;
+        this.eatSoldierMovesStack=computerCopy.eatSoldierMovesStack;
+        this.notSafeSoldierMovesStack=computerCopy.notSafeSoldierMovesStack;
+        this.enemy=computerCopy.enemy;
+        this.map=computerCopy.map;
+    }
+
     public void copyPlayer(Players player){
+        if(player==null)
+            return;
         this.player_color = player.getPlayer_color();
         this.soldier_left = player.getSoldierLeft();
         this.soldier_on_board = player.getSoldier_on_board();
