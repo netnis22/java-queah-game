@@ -36,7 +36,7 @@ public class Computer extends Players {
         this.lBoard=lBoard;
         this.gBoard=gBoard;
         this.enamy=enamy;
-        
+        //System.out.println(enamy.getLboard());
 
         if(getSoldierLeft()==0) isSoldierNotLeftFirstTime++;
 
@@ -48,40 +48,40 @@ public class Computer extends Players {
         return test;
     }
 
-        //NOT FOR QUEAHBOARD ONLY MINMAX CAN USE THIS FUNCTION!!!!!!!!!!
-        public int[] playNegamax(boolean isEaten,Coordinate moveCoordinate,Coordinate eat,Coordinate soldierCoordinates ,int [][]lBoard,GameButton [][]gBoard){
-            int test[]=new int[8];
-            this.lBoard=lBoard;
-            this.gBoard=gBoard;
+    //NOT FOR QUEAHBOARD ONLY MINMAX CAN USE THIS FUNCTION!!!!!!!!!!
+    public int[] playNegamax(boolean isEaten,Coordinate moveCoordinate,Coordinate eat,Coordinate soldierCoordinates ,int [][]lBoard,GameButton [][]gBoard){
+        int test[]=new int[8];
+        this.lBoard=lBoard;
+        this.gBoard=gBoard;
     
-            if(getSoldierLeft()==0) isSoldierNotLeftFirstTime++;
+        if(getSoldierLeft()==0) isSoldierNotLeftFirstTime++;
     
-            if(isEaten && isSoldierNotLeftFirstTime<=1) test=addNewSolid();
-            else{
-                if(isSoldierNotLeftFirstTime<=1) test[7]=1;
-                else test[7]=0;
+        if(isEaten && isSoldierNotLeftFirstTime<=1) test=addNewSolid();
+        else{
+            if(isSoldierNotLeftFirstTime<=1) test[7]=1;
+            else test[7]=0;
     
-                if(eat !=null){
-                    test[0] = moveCoordinate.getRow();
-                    test[1] = moveCoordinate.getColumn();
-                    test[2] = soldierCoordinates.getRow();
-                    test[3] = soldierCoordinates.getColumn();
-                    test[4] = eat.getRow();
-                    test[5] = eat.getColumn();
-                    test[6] = 1;
-                }
-                else{
-                    test[0] = moveCoordinate.getRow();
-                    test[1] = moveCoordinate.getColumn();
-                    test[2] = soldierCoordinates.getRow();
-                    test[3] = soldierCoordinates.getColumn();
-                    test[4] = 0;
-                    test[5] = 0;
-                    test[6] = 0;
-                }
+            if(eat !=null){
+                test[0] = moveCoordinate.getRow();
+                test[1] = moveCoordinate.getColumn();
+                test[2] = soldierCoordinates.getRow();
+                test[3] = soldierCoordinates.getColumn();
+                test[4] = eat.getRow();
+                test[5] = eat.getColumn();
+                test[6] = 1;
             }
-            return test;
+            else{
+                test[0] = moveCoordinate.getRow();
+                test[1] = moveCoordinate.getColumn();
+                test[2] = soldierCoordinates.getRow();
+                test[3] = soldierCoordinates.getColumn();
+                test[4] = 0;
+                test[5] = 0;
+                test[6] = 0;
+            }
         }
+        return test;
+    }
 
     //return newRow,newColumn,0,0,0,0,0,0
     //this function is for the computer to add new soldier if soldier is eaten
@@ -553,11 +553,13 @@ public class Computer extends Players {
     }
 
     public void copy(Computer computer){
+
         super.copy(computer);
 
         this.map=computer.map;
-        copyBoard(lBoard, computer.lBoard);
-        copyGBoard(gBoard, computer.gBoard);
+        
+        //copyBoard(computer.lBoard,lBoard );
+        //copyGBoard(computer.gBoard,gBoard);
         this.difficulty=computer.difficulty;
         this.soldierMovesStack=computer.soldierMovesStack;
         this.isSoldierNotLeftFirstTime=computer.isSoldierNotLeftFirstTime;
@@ -574,11 +576,32 @@ public class Computer extends Players {
 
 
     public void copyGBoard(GameButton [][]gBoard, GameButton [][]newGBoard) {
+        if(newGBoard==null) newGBoard=new GameButton[gBoard.length][gBoard.length];
         for (int i = 0; i < gBoard.length; i++) {
             for (int j = 0; j < gBoard[i].length; j++) {
                 newGBoard[i][j] = gBoard[i][j];
             }
         }
+    }
+
+    public void setBoard(int[][] board){
+        this.lBoard=board;
+    }
+
+    public int[][] getLboard(){
+        return lBoard;
+    }
+
+    public void setGBoard(GameButton[][] gBoard){
+        this.gBoard=gBoard;
+    }
+
+    public GameButton[][] getGBoard(){
+        return gBoard;
+    }
+
+    public int getIsSoldierNotLeftFirstTime(){
+        return isSoldierNotLeftFirstTime;
     }
 
     @Override

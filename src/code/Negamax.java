@@ -29,12 +29,16 @@ public class Negamax {
         
         this.me = new Computer(me.getPlayer_color(), me.getMap(), me.getDifficulty());
         this.me.copy(me);
-        
+        this.me.setBoard(board);
+        this.me.setGBoard(gBoard);
+
         this.opponent = new Computer(opponent.getPlayer_color(), opponent.getMap(), opponent.getDifficulty());
         this.opponent.copy(opponent);
-
+        this.opponent.setBoard(board);
+        this.opponent.setGBoard(gBoard);
+        
         numofRecursion++;
-        System.out.println("numofRecursion: "+numofRecursion);
+        //System.out.println("numofRecursion: "+numofRecursion);
     }
 
     public int negamax(){
@@ -49,24 +53,25 @@ public class Negamax {
         
 
         me.findAllPossibleSoldier();
+
         soldier = (Stack<SoldierMoves>)me.getSoldierMovesStack().clone();
         while(!soldier.isEmpty()){
             SoldierMoves moves = soldier.pop();
-
+            
             int eval=Integer.MIN_VALUE;
             int numOfindex = 0;
             int bestMoveIndexEval = Integer.MIN_VALUE;
             int[][] newBoard;
 
-            if(isEaten){
+            if(isEaten && me.getIsSoldierNotLeftFirstTime()<=1){
                 //data = me.play(isEaten, board, gBoard, opponent);
-                data = me.playNegamax(isEaten,null,null,null,board, gBoard);
+                data = me.playNegamax(true,null,null,null,board, gBoard);
 
                 newBoard = new int[board.length][board[0].length];
                 copyBoard(board,newBoard);
                 updateBord(newBoard, data, me.getPlayer_color());
 
-                eval = -1 * new Negamax(newBoard, gBoard, depth,opponent, me, false).negamax();    
+                eval = -1 * new Negamax(newBoard, gBoard, depth-1,opponent, me, false).negamax();    
                 maxEval = Math.max(maxEval, eval);
             }
             else if(moves.getPossibleEatMoves()!=null && !moves.getPossibleEatMoves().isEmpty()){
@@ -79,7 +84,7 @@ public class Negamax {
                     copyBoard(board,newBoard);
                     updateBord(newBoard, data, me.getPlayer_color());
 
-                    eval = -1 * new Negamax(newBoard, gBoard, depth, opponent, me, true).negamax();
+                    eval = -1 * new Negamax(newBoard, gBoard, depth-1, opponent, me, true).negamax();
                     maxEval = Math.max(maxEval, eval);
 
                     if(maxEval<bestMoveIndexEval){
@@ -98,7 +103,7 @@ public class Negamax {
                     copyBoard(board,newBoard);
                     updateBord(newBoard, data, me.getPlayer_color());
 
-                    eval = -1 * new Negamax(newBoard, gBoard, depth, opponent, me, false).negamax();
+                    eval = -1 * new Negamax(newBoard, gBoard, depth-1, opponent, me, false).negamax();
                     maxEval = Math.max(maxEval, eval);
 
                     if(maxEval<bestMoveIndexEval){
