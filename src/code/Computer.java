@@ -5,7 +5,7 @@ import java.util.Stack;
 
 public class Computer extends Players {
 
-    private final int difficulty;
+    private int difficulty;
     private int player_color; //1 red 2 black
     private int isSoldierNotLeftFirstTime;
     private int sameMoveCount;
@@ -16,8 +16,9 @@ public class Computer extends Players {
     private GameButton [][]gBoard;
 
     private Stack<SoldierMoves> soldierMovesStack;
+
+    private Computer enamy;
     
-    private Players player;
     
     public Computer(int player_color, String map,int difficulty) {
         super(player_color, map);
@@ -29,13 +30,13 @@ public class Computer extends Players {
     }
 
     //this function is to manage the computer,isSoldierLeft-1(yes)/0(no)
-    public int[] play(boolean isEaten,int [][]lBoard,GameButton [][]gBoard,Players player) {
+    public int[] play(boolean isEaten,int [][]lBoard,GameButton [][]gBoard, Computer enamy){
         int test[]=new int[8];
         this.lBoard=lBoard;
         this.gBoard=gBoard;
-        this.player=player;
+        this.enamy=enamy;
 
-        if(player.getSoldierLeft()==0) isSoldierNotLeftFirstTime++;
+        if(getSoldierLeft()==0) isSoldierNotLeftFirstTime++;
 
         if(isEaten && isSoldierNotLeftFirstTime<=1) test=addNewSolid();
         else test=move();
@@ -404,6 +405,20 @@ public class Computer extends Players {
             System.out.print(i+" ");
         }
     }
+
+    public int getDifficulty(){
+        return difficulty;
+    }
+
+    public void copy(Computer computer){
+        super.copy(computer);
+
+        this.lBoard=computer.lBoard;
+        this.gBoard=computer.gBoard;
+        this.difficulty=computer.difficulty;
+        this.soldierMovesStack=computer.soldierMovesStack;
+    }
+
 
     @Override
     public boolean IsHuman() {return false;}

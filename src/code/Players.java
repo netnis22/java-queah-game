@@ -10,12 +10,15 @@ public class Players extends JPanel {
     protected int soldier_on_board;
     protected final int player_color; // 1 red | 2 black 
 
+    protected String map;
+
     private static final ImageIcon RedSoldier = new ImageIcon("././img/Soldier_red_New.png");
     private static final ImageIcon BlackSoldier =  new ImageIcon("././img/Soldier_black_New.png");
     private JLabel img;
 
     public Players(int player_color,String map){
         this.player_color = player_color;
+        this.map = map;
         int soldiers;
 
         if(map.equals("small")){
@@ -52,6 +55,15 @@ public class Players extends JPanel {
 
     public int getSoldierLeft() {
         return soldier_left;
+    }
+
+    public String getMap() {
+        return map;
+    }
+
+    public void copy(Players player){
+        this.soldier_left=player.soldier_left;
+        this.soldier_on_board=player.soldier_on_board;
     }
 
     // 0 no soldier left | 1 soldier on board is 4 and thir is soldier_left

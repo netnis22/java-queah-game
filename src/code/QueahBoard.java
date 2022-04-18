@@ -19,10 +19,12 @@ public class QueahBoard extends JPanel {
     private static int startPlayer=1;
     private boolean isFirstCOMvsCOM=true;
 
+    private static final int THINKING_TIME=500;
     private static int sizeOfboard=5;
     private static int heightOfboard=2;
     private static int max_Player_soldiers_on_board=4;
     private static int turn;// 1 red 2 black
+
 
     private GameButton [][]gBoard;  //graphic board
 	private int [][]lBoard;       //logic board, 0 free 1 red player  2 black Player
@@ -53,9 +55,13 @@ public class QueahBoard extends JPanel {
     private void constrictGamMode(){
         switch (game.gameMode) {
             case 1:
-                playerRed = game.playerRed;
                 computerBlack = game.computerBlack;
                 playerBlack = game.computerBlack;
+
+                playerRed = game.playerRed;
+
+                computerRed = new Computer(playerRed.getPlayer_color(),playerRed.getMap(),computerBlack.getDifficulty());
+                computerRed.copy(playerRed);
                 break;
             case 2:
                 computerRed = game.computerRed;
@@ -431,7 +437,7 @@ public class QueahBoard extends JPanel {
                 new Thread(new Runnable(){
                     public void run(){
                         try{
-                            Thread.sleep(1500);
+                            Thread.sleep(THINKING_TIME);
                             ComputerMove(false);  
                         }
                       catch(InterruptedException ex) {}
@@ -448,7 +454,7 @@ public class QueahBoard extends JPanel {
                                 new Thread(new Runnable(){
                                     public void run(){
                                         try{
-                                            Thread.sleep(1500);
+                                            Thread.sleep(THINKING_TIME);
                                             ComputerMove(false);  
                                         }
                                       catch(InterruptedException ex) {}
@@ -523,8 +529,8 @@ public class QueahBoard extends JPanel {
 
             int data[];
             //check if the player is computer and this is His turn if it is then call the function play
-            if(turn == playerRed.getPlayer_color() && !playerRed.IsHuman()) data = computerRed.play(isEaten,lBoard,gBoard,playerRed);
-            else if(turn == playerBlack.getPlayer_color() && !playerBlack.IsHuman()) data = computerBlack.play(isEaten,lBoard,gBoard,playerBlack);
+            if(turn == playerRed.getPlayer_color() && !playerRed.IsHuman()) data = computerRed.play(isEaten,lBoard,gBoard,computerBlack);
+            else if(turn == playerBlack.getPlayer_color() && !playerBlack.IsHuman()) data = computerBlack.play(isEaten,lBoard,gBoard,computerRed);
             else{
                 //System.out.println("dont move computer");
                 return;
@@ -548,7 +554,7 @@ public class QueahBoard extends JPanel {
                     new Thread(new Runnable(){
                         public void run(){
                             try{
-                                Thread.sleep(1500);
+                                Thread.sleep(THINKING_TIME);
                                 ComputerMove(false);  
                             }
                           catch(InterruptedException ex) {}
@@ -563,7 +569,7 @@ public class QueahBoard extends JPanel {
                     new Thread(new Runnable(){
                         public void run(){
                             try{
-                                Thread.sleep(1500);
+                                Thread.sleep(THINKING_TIME);
                                 ComputerMove(false);  
                             }
                           catch(InterruptedException ex) {}
