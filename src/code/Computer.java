@@ -9,6 +9,7 @@ public class Computer extends Players {
     private int player_color; //1 red 2 black
     private int isSoldierNotLeftFirstTime;
     private int sameMoveCount;
+    private int depth=3;
 
     private Coordinate lestPos=null;
 
@@ -35,6 +36,7 @@ public class Computer extends Players {
         this.lBoard=lBoard;
         this.gBoard=gBoard;
         this.enamy=enamy;
+        
 
         if(getSoldierLeft()==0) isSoldierNotLeftFirstTime++;
 
@@ -45,6 +47,41 @@ public class Computer extends Players {
 
         return test;
     }
+
+        //NOT FOR QUEAHBOARD ONLY MINMAX CAN USE THIS FUNCTION!!!!!!!!!!
+        public int[] playNegamax(boolean isEaten,Coordinate moveCoordinate,Coordinate eat,Coordinate soldierCoordinates ,int [][]lBoard,GameButton [][]gBoard){
+            int test[]=new int[8];
+            this.lBoard=lBoard;
+            this.gBoard=gBoard;
+    
+            if(getSoldierLeft()==0) isSoldierNotLeftFirstTime++;
+    
+            if(isEaten && isSoldierNotLeftFirstTime<=1) test=addNewSolid();
+            else{
+                if(isSoldierNotLeftFirstTime<=1) test[7]=1;
+                else test[7]=0;
+    
+                if(eat !=null){
+                    test[0] = moveCoordinate.getRow();
+                    test[1] = moveCoordinate.getColumn();
+                    test[2] = soldierCoordinates.getRow();
+                    test[3] = soldierCoordinates.getColumn();
+                    test[4] = eat.getRow();
+                    test[5] = eat.getColumn();
+                    test[6] = 1;
+                }
+                else{
+                    test[0] = moveCoordinate.getRow();
+                    test[1] = moveCoordinate.getColumn();
+                    test[2] = soldierCoordinates.getRow();
+                    test[3] = soldierCoordinates.getColumn();
+                    test[4] = 0;
+                    test[5] = 0;
+                    test[6] = 0;
+                }
+            }
+            return test;
+        }
 
     //return newRow,newColumn,0,0,0,0,0,0
     //this function is for the computer to add new soldier if soldier is eaten
@@ -74,6 +111,8 @@ public class Computer extends Players {
         Stack<SoldierMoves> eatSoldierMovesStack=new Stack<SoldierMoves>();
         Stack<SoldierMoves> notSafeSoldierMovesStack=new Stack<SoldierMoves>();
 
+        Negamax negamax;
+
         findAllPossibleSoldier();
 
         copyStack(copySoldierMovesStack,soldierMovesStack);
@@ -97,24 +136,55 @@ public class Computer extends Players {
 
             List<Coordinate[]> possibleEatMoves;
 
-            if(difficulty == 0){
-                popRandom(eatSoldierMovesStack);
-                possibleEatMoves=eatSoldierMovesStack.peek().getPossibleEatMoves();
-                soldierCoordinate=eatSoldierMovesStack.peek().getSoldierCoordinate();
+            if(difficulty==2){
+                negamax = new Negamax(lBoard,gBoard,depth,Computer.this,enamy,false);
+                negamax.negamax();
             }
-            else{
-                SoldierMoves bestEatMoves;
-                bestEatMoves = findBestEat(eatSoldierMovesStack);
-                possibleEatMoves=bestEatMoves.getPossibleEatMoves();
-                soldierCoordinate=bestEatMoves.getSoldierCoordinate();
-            }
+            else negamax=null;
 
+            SoldierMoves bestEatMoves;
+            switch(difficulty){
+                case 0:
+                    popRandom(eatSoldierMovesStack);
+                    possibleEatMoves=eatSoldierMovesStack.peek().getPossibleEatMoves();
+                    soldierCoordinate=eatSoldierMovesStack.peek().getSoldierCoordinate();
+                    break;
+                case 1:
+                    bestEatMoves = findBestEat(eatSoldierMovesStack);
+                    possibleEatMoves=bestEatMoves.getPossibleEatMoves();
+                    soldierCoordinate=bestEatMoves.getSoldierCoordinate();
+                    break;
+                case 2:
+                    for(int i=0 ;i<negamax.bestpop;i++){
+                        eatSoldierMovesStack.pop();
+                    }
+                    bestEatMoves=eatSoldierMovesStack.peek();
+                    possibleEatMoves=bestEatMoves.getPossibleEatMoves();
+                    soldierCoordinate=bestEatMoves.getSoldierCoordinate();
+                    break;
+                default:
+                    popRandom(eatSoldierMovesStack);
+                    possibleEatMoves=eatSoldierMovesStack.peek().getPossibleEatMoves();
+                    soldierCoordinate=eatSoldierMovesStack.peek().getSoldierCoordinate();
+                    break;
+            }
 
             size = possibleEatMoves.size();
 
-            if(difficulty == 0) index=(int)(Math.random()*(size-1));
-            else index=indexOfBestEat(possibleEatMoves);
-            //System.out.println("index:"+index+" size-1:"+(size-1));
+            switch(difficulty){
+                case 0:
+                    index=(int)(Math.random()*(size-1));
+                    break;
+                case 1:
+                    index=indexOfBestEat(possibleEatMoves);
+                    break;
+                case 2:
+                    index=negamax.bestMoveIndex;
+                    break;
+                default:
+                    index=(int)(Math.random()*(size-1));
+                    break;
+            } 
 
             test[0] = possibleEatMoves.get(index)[0].getRow();
             test[1] = possibleEatMoves.get(index)[0].getColumn();
@@ -129,22 +199,55 @@ public class Computer extends Players {
 
             List<Coordinate> possibleMoves;
 
-            if(difficulty == 0){
-                popRandom(notSafeSoldierMovesStack);
-                possibleMoves=notSafeSoldierMovesStack.peek().getPossibleMoves();
-                soldierCoordinate=notSafeSoldierMovesStack.peek().getSoldierCoordinate();
+            if(difficulty==2){
+                negamax = new Negamax(lBoard,gBoard,depth,Computer.this,enamy,false);
+                negamax.negamax();
             }
-            else{
-                SoldierMoves bestMoves;
-                bestMoves = findBestMove(notSafeSoldierMovesStack);
-                possibleMoves=bestMoves.getPossibleMoves();
-                soldierCoordinate=bestMoves.getSoldierCoordinate();
+            else negamax=null;
+
+            SoldierMoves bestMoves;
+            switch(difficulty){
+                case 0:
+                    popRandom(notSafeSoldierMovesStack);
+                    possibleMoves=notSafeSoldierMovesStack.peek().getPossibleMoves();
+                    soldierCoordinate=notSafeSoldierMovesStack.peek().getSoldierCoordinate();
+                    break;
+                case 1:
+                    bestMoves = findBestMove(notSafeSoldierMovesStack);
+                    possibleMoves=bestMoves.getPossibleMoves();
+                    soldierCoordinate=bestMoves.getSoldierCoordinate();
+                    break;
+                case 2:
+                    for(int i=0 ;i<negamax.bestpop;i++){
+                        soldierMovesStack.pop();
+                    }
+                    bestMoves=soldierMovesStack.peek();
+                    possibleMoves=bestMoves.getPossibleMoves();
+                    soldierCoordinate=bestMoves.getSoldierCoordinate();
+                    break;
+                default:
+                    popRandom(notSafeSoldierMovesStack);
+                    possibleMoves=notSafeSoldierMovesStack.peek().getPossibleMoves();
+                    soldierCoordinate=notSafeSoldierMovesStack.peek().getSoldierCoordinate();
+                    break;
             }
 
             size = notSafeSoldierMovesStack.peek().getPossibleMoves().size();
 
-            if(difficulty == 0) index=(int)(Math.random()*(size-1));
-            else index=indexOfBestMove(possibleMoves);
+            switch(difficulty){
+                case 0:
+                    index=(int)(Math.random()*(size-1));
+                    break;
+                case 1:
+                    index=indexOfBestMove(possibleMoves);
+                    break;
+                case 2:
+                    index=negamax.bestMoveIndex;
+                    break;
+                default:
+                    index=(int)(Math.random()*(size-1));
+                    break;
+            }
 
             //fixs loop infanetly problem
             if(lestPos==null)lestPos=possibleMoves.get(index);
@@ -181,22 +284,56 @@ public class Computer extends Players {
             
             List<Coordinate> possibleMoves;
 
-            if(difficulty == 0){
-                popRandom(soldierMovesStack);
-                possibleMoves=soldierMovesStack.peek().getPossibleMoves();
-                soldierCoordinate=soldierMovesStack.peek().getSoldierCoordinate();
+            if(difficulty==2){
+                negamax = new Negamax(lBoard,gBoard,depth,Computer.this,enamy,false);
+                negamax.negamax();
             }
-            else{
-                SoldierMoves bestMoves;
-                bestMoves = findBestMove(soldierMovesStack);
-                possibleMoves=bestMoves.getPossibleMoves();
-                soldierCoordinate=bestMoves.getSoldierCoordinate();
+            else negamax=null;
+
+            SoldierMoves bestMoves;
+            switch(difficulty){
+                case 0:
+                    popRandom(soldierMovesStack);
+                    possibleMoves=soldierMovesStack.peek().getPossibleMoves();
+                    soldierCoordinate=soldierMovesStack.peek().getSoldierCoordinate();
+                    break;
+                case 1:
+                    bestMoves = findBestMove(soldierMovesStack);
+                    possibleMoves=bestMoves.getPossibleMoves();
+                    soldierCoordinate=bestMoves.getSoldierCoordinate();
+                    break;
+                case 2:
+                    for(int i=0 ;i<negamax.bestpop;i++){
+                        soldierMovesStack.pop();
+                    }
+                    bestMoves=soldierMovesStack.peek();
+                    possibleMoves=bestMoves.getPossibleMoves();
+                    soldierCoordinate=bestMoves.getSoldierCoordinate();
+                    break;
+                default:
+                    popRandom(soldierMovesStack);
+                    possibleMoves=soldierMovesStack.peek().getPossibleMoves();
+                    soldierCoordinate=soldierMovesStack.peek().getSoldierCoordinate();
+                    break;
             }
+
 
             size = soldierMovesStack.peek().getPossibleMoves().size();
 
-            if(difficulty == 0) index=(int)(Math.random()*(size-1));
-            else index=indexOfBestMove(possibleMoves);
+            switch(difficulty){
+                case 0:
+                    index=(int)(Math.random()*(size-1));
+                    break;
+                case 1:
+                    index=indexOfBestMove(possibleMoves);
+                    break;
+                case 2:
+                    index=negamax.bestMoveIndex;
+                    break;
+                default:
+                    index=(int)(Math.random()*(size-1));
+                    break;
+            }
 
             //fixs loop infanetly problem
             if(lestPos==null)lestPos=possibleMoves.get(index);
@@ -370,7 +507,8 @@ public class Computer extends Players {
     }
 
     //find all the soldier of the computer that is not stuck
-    private void findAllPossibleSoldier(){
+    public void findAllPossibleSoldier(){
+        soldierMovesStack.clear();
         for(int i=0;i<lBoard.length;i++){
             for(int j=0;j<lBoard.length;j++){
                 if(lBoard[i][j]==player_color){
@@ -410,15 +548,38 @@ public class Computer extends Players {
         return difficulty;
     }
 
+    public Stack<SoldierMoves> getSoldierMovesStack(){
+        return soldierMovesStack;
+    }
+
     public void copy(Computer computer){
         super.copy(computer);
 
-        this.lBoard=computer.lBoard;
-        this.gBoard=computer.gBoard;
+        this.map=computer.map;
+        copyBoard(lBoard, computer.lBoard);
+        copyGBoard(gBoard, computer.gBoard);
         this.difficulty=computer.difficulty;
         this.soldierMovesStack=computer.soldierMovesStack;
+        this.isSoldierNotLeftFirstTime=computer.isSoldierNotLeftFirstTime;
     }
 
+
+    public void copyBoard(int[][] board, int[][] newBoard) {
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[i].length; j++) {
+                newBoard[i][j] = board[i][j];
+            }
+        }
+    }
+
+
+    public void copyGBoard(GameButton [][]gBoard, GameButton [][]newGBoard) {
+        for (int i = 0; i < gBoard.length; i++) {
+            for (int j = 0; j < gBoard[i].length; j++) {
+                newGBoard[i][j] = gBoard[i][j];
+            }
+        }
+    }
 
     @Override
     public boolean IsHuman() {return false;}
