@@ -125,13 +125,29 @@ public class Negamax {
     }
 
     private int evaluate() {
-        int meSoldiers = me.getSoldierLeft()+me.getSoldier_on_board();
-        int opponentSoldiers = opponent.getSoldierLeft()+opponent.getSoldier_on_board();
+        int meSoldiers = (me.getSoldierLeft()+me.getSoldier_on_board())*10;
+        int opponentSoldiers = (opponent.getSoldierLeft()+opponent.getSoldier_on_board())*10;
 
-        if (meSoldiers == 0) return Integer.MIN_VALUE;
-        if (opponentSoldiers == 0) return Integer.MAX_VALUE;
+        // if (meSoldiers == 0) return Integer.MIN_VALUE;
+        // if (opponentSoldiers == 0) return Integer.MAX_VALUE;
 
-        return meSoldiers - opponentSoldiers;
+        int meEval = evaluateBordByPlayer(me);
+        int opponentEval = evaluateBordByPlayer(opponent);
+
+        return meSoldiers+meEval - opponentSoldiers+opponentEval;
+    }
+
+    private int evaluateBordByPlayer(Computer computer){
+        int eval = 0;
+        Stack<SoldierMoves> soldiers;
+
+        if(computer.getSoldierMovesStack()==null || computer.getSoldierMovesStack().isEmpty()) return 0;
+        soldiers = computer.getSoldierMovesStack();
+
+        while(!soldiers.isEmpty()){
+            eval += soldiers.pop().weightSoldierMoves();
+        }
+        return eval;
     }
 
     private void updateBord(int[][] board,int[] data, int player_color) {
