@@ -9,7 +9,7 @@ public class Computer extends Players {
     private int player_color; //1 red 2 black
     private int isSoldierNotLeftFirstTime;
     private int sameMoveCount;
-    private int depth=3;
+    private int depth=6;
 
     private Coordinate lestPos=null;
 

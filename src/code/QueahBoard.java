@@ -19,7 +19,7 @@ public class QueahBoard extends JPanel {
     private static int startPlayer=1;
     private boolean isFirstCOMvsCOM=true;
 
-    private static final int THINKING_TIME=500;
+    private static final int THINKING_TIME=1000;
     private static int sizeOfboard=5;
     private static int heightOfboard=2;
     private static int max_Player_soldiers_on_board=4;

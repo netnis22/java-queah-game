@@ -139,10 +139,10 @@ public class Negamax {
 
     private int evaluateBordByPlayer(Computer computer){
         int eval = 0;
-        Stack<SoldierMoves> soldiers;
+        Stack<SoldierMoves> soldiers = new Stack<>();
 
         if(computer.getSoldierMovesStack()==null || computer.getSoldierMovesStack().isEmpty()) return 0;
-        soldiers = computer.getSoldierMovesStack();
+        soldiers = (Stack<SoldierMoves>) computer.getSoldierMovesStack().clone();
 
         while(!soldiers.isEmpty()){
             eval += soldiers.pop().weightSoldierMoves();
