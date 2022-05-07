@@ -9,7 +9,7 @@ public class Computer extends Players {
     private int player_color; //1 red 2 black
     private int isSoldierNotLeftFirstTime;
     private int sameMoveCount;
-    private int depth=6;
+    private int depth=3;
 
     private Coordinate lestPos=null;
 
@@ -19,6 +19,8 @@ public class Computer extends Players {
     private Stack<SoldierMoves> soldierMovesStack;
 
     private Computer enamy;
+
+    private boolean flag=false;
     
     
     public Computer(int player_color, String map,int difficulty) {
@@ -217,11 +219,16 @@ public class Computer extends Players {
                     possibleMoves=bestMoves.getPossibleMoves();
                     soldierCoordinate=bestMoves.getSoldierCoordinate();
                     break;
+                // case 2:
+                //     bestMoves = findBestMove(notSafeSoldierMovesStack);
+                //     possibleMoves=bestMoves.getPossibleMoves();
+                //     soldierCoordinate=bestMoves.getSoldierCoordinate();
+                //     break;
                 case 2:
                     for(int i=0 ;i<negamax.bestpop;i++){
                         soldierMovesStack.pop();
                     }
-                    bestMoves=soldierMovesStack.peek();
+                    bestMoves=soldierMovesStack.peek();  
                     possibleMoves=bestMoves.getPossibleMoves();
                     soldierCoordinate=bestMoves.getSoldierCoordinate();
                     break;
@@ -241,6 +248,9 @@ public class Computer extends Players {
                 case 1:
                     index=indexOfBestMove(possibleMoves);
                     break;
+                // case 2:
+                //     index=indexOfBestMove(possibleMoves);
+                //     break;
                 case 2:
                     index=negamax.bestMoveIndex;
                     break;
@@ -249,23 +259,28 @@ public class Computer extends Players {
                     break;
             }
 
-            //fixs loop infanetly problem
-            if(lestPos==null)lestPos=possibleMoves.get(index);
-            else if(lestPos.equals(possibleMoves.get(index))){
-                sameMoveCount++;
-                if(sameMoveCount>5){
-                    index = 0;
-                    while(lestPos.equals(possibleMoves.get(index)))
-                    {
-                        index++;
-                        if(index>=size) break;
-                    }
-                }
-            }
-            else if(possibleMoves.size()>1){
-                sameMoveCount=0;
-                lestPos=possibleMoves.get(index);
-            }
+            // //fixs loop infanetly problem
+            // if(lestPos==null)lestPos=possibleMoves.get(index);
+            // else if(lestPos.equals(possibleMoves.get(index)) || flag){
+            //     sameMoveCount++;
+            //     if(sameMoveCount>3) flag = false;
+            //     if(sameMoveCount>2){
+            //         index = 0;
+            //         flag=true;
+            //         while(lestPos.equals(possibleMoves.get(index)))
+            //         {
+            //             index++;
+            //             if(index+1>=possibleMoves.size()) break;
+            //         }
+                    
+            //     }
+            // }
+            // else if(possibleMoves.size()>1){
+            //     sameMoveCount=0;
+            //     lestPos=possibleMoves.get(index);
+            // }
+
+
             test[0] = possibleMoves.get(index).getRow();
             test[1] = possibleMoves.get(index).getColumn();
             test[2] = soldierCoordinate.getRow();
@@ -335,23 +350,24 @@ public class Computer extends Players {
                     break;
             }
 
-            //fixs loop infanetly problem
-            if(lestPos==null)lestPos=possibleMoves.get(index);
-            else if(lestPos.equals(possibleMoves.get(index))){
-                sameMoveCount++;
-                if(sameMoveCount>5){
-                    index = 0;
-                    while(lestPos.equals(possibleMoves.get(index)))
-                    {
-                        index++;
-                        if(index>=size) break;
-                    }
-                }
-            }
-            else if(possibleMoves.size()>1){
-                sameMoveCount=0;
-                lestPos=possibleMoves.get(index);
-            }
+            // //fixs loop infanetly problem
+            // if(lestPos==null)lestPos=possibleMoves.get(index);
+            // else if(lestPos.equals(possibleMoves.get(index))|| flag){
+            //     sameMoveCount++;
+            //     if(sameMoveCount>3) flag = false;
+            //     if(sameMoveCount>2){
+            //         index = 0;
+            //         while(lestPos.equals(possibleMoves.get(index)))
+            //         {
+            //             index++;
+            //             if(index+1>=possibleMoves.size()) break;
+            //         }
+            //     }
+            // }
+            // else if(possibleMoves.size()>1){
+            //     sameMoveCount=0;
+            //     lestPos=possibleMoves.get(index);
+            // }
 
             test[0] = possibleMoves.get(index).getRow();
             test[1] = possibleMoves.get(index).getColumn();

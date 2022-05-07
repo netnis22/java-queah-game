@@ -448,7 +448,7 @@ public class QueahBoard extends JPanel {
                 if(((previsRow == row+1 || previsRow == row-1) && previsColumn == column) || ((previsColumn == column+1 || previsColumn == column-1) && previsRow == row )){
                     if(lBoard[row][column] == 0 && lBoard[previsRow][previsColumn] == turn){
                         if(!(previsRow == row && previsColumn == column)){
-                            System.out.println("1");
+                            // System.out.println("1");
                             moveSoldier();
                             if(game.gameMode==1){
                                 new Thread(new Runnable(){
@@ -469,13 +469,13 @@ public class QueahBoard extends JPanel {
                     if(!(previsRow == row && previsColumn == column)){
                         if(previsColumn == column){
                             if((previsRow == row+2 && (lBoard[row+1][column] !=turn && lBoard[row+1][column] !=0 ))){
-                                System.out.println("2");
+                                // System.out.println("2");
                                 removeSoldier(row+1, column);
                                 moveSoldier();
                                 if(game.gameMode==1) ComputerMove(true); 
                             } 
                             else if((previsRow == row-2 && (lBoard[row-1][column] !=turn && lBoard[row-1][column] !=0 ))){
-                                System.out.println("3");
+                                // System.out.println("3");
                                 removeSoldier(row-1,column);
                                 moveSoldier();
                                 if(game.gameMode==1){
@@ -486,13 +486,13 @@ public class QueahBoard extends JPanel {
                         }
                         else if(previsRow == row){
                             if((previsColumn == column+2 && (lBoard[row][column+1] !=turn && lBoard[row][column+1] !=0 ))){
-                                System.out.println("4");
+                                // System.out.println("4");
                                 removeSoldier(row, column+1);
                                 moveSoldier();
                                 if(game.gameMode==1) ComputerMove(true); 
                             } 
                             else if((previsColumn == column-2 && (lBoard[row][column-1] !=turn && lBoard[row][column-1] !=0 ))){
-                                System.out.println("5");
+                                // System.out.println("5");
                                 removeSoldier(row, column-1);
                                 moveSoldier();
                                 if(game.gameMode==1) ComputerMove(true); 
@@ -504,12 +504,12 @@ public class QueahBoard extends JPanel {
                 previsButtonPressed = false;
             }
             else if(lBoard[row][column] == 0 ){
-                System.out.println("7");
+                // System.out.println("7");
                 previsButtonPressed = false;
             }
             else
             {
-                System.out.println("8");
+                // System.out.println("8");
                 previsButtonPressed = true;
                 previsRow=row;
                 previsColumn=column;
@@ -548,7 +548,7 @@ public class QueahBoard extends JPanel {
             previsColumn = data[3];
 
             if(data[6]==0 && (!isEaten||data[7]==0)){
-                System.out.println("move soldier");
+                // System.out.println("move soldier");
                 moveSoldier();
                 if(game.gameMode==2){
                     new Thread(new Runnable(){
@@ -563,7 +563,7 @@ public class QueahBoard extends JPanel {
                 }
             }
             else if(isEaten && data[7]==1){
-                System.out.println("addSoldierToBoard");
+                // System.out.println("addSoldierToBoard");
                 addSoldierToBoard();
                 if(game.gameMode==2){
                     new Thread(new Runnable(){
@@ -579,7 +579,7 @@ public class QueahBoard extends JPanel {
             }
             else
             {
-                System.out.println("eat soldier");
+                // System.out.println("eat soldier");
                 removeSoldier(data[4], data[5]);
                 moveSoldier();
                 if(game.gameMode==2){
